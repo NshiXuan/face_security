@@ -24,7 +24,7 @@ const Home = function () {
 
       <Button>测试</Button>
 
-      <div className="border-b-8 border-red-500 mt-5">test</div>
+      <div className="border-b-8 border-purple-500 mt-5">test</div>
     </div>
   )
 }

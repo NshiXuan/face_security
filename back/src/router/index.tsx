@@ -1,3 +1,4 @@
+import Face from '@/pages/face'
 import React, { lazy } from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
 
@@ -41,6 +42,10 @@ const routes: RouteObject[] = [
         element: <Role />
       }
     ]
+  },
+  {
+    path: '/face',
+    element: <Face />
   },
   {
     path: '/*',

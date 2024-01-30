@@ -2,7 +2,8 @@ import {
   DashboardOutlined,
   FormOutlined,
   ReadOutlined,
-  UserOutlined
+  UserOutlined,
+  SmileOutlined
 } from '@ant-design/icons'
 import React from 'react'
 
@@ -20,13 +21,13 @@ export const menuData: MenuDataItem[] = [
     label: '首页',
     key: '/home',
     link: '/home',
-    icon: <ReadOutlined />
+    icon: <DashboardOutlined />,
   },
   {
     label: '账户管理',
     key: '/user',
     link: '/user',
-    icon: <DashboardOutlined />,
+    icon: <ReadOutlined />,
     children: [
       {
         label: '账户列表',
@@ -34,12 +35,18 @@ export const menuData: MenuDataItem[] = [
         link: '/user/list',
         icon: <FormOutlined />
       },
-      {
-        label: '角色管理',
-        key: '/user/role',
-        link: '/user/role',
-        icon: <UserOutlined />
-      }
     ]
+  },
+  {
+    label: '角色管理',
+    key: '/user/role',
+    link: '/user/role',
+    icon: <UserOutlined />
+  },
+  {
+    label: '人脸库管理',
+    key: '/face',
+    link: '/face',
+    icon: <SmileOutlined />
   }
 ]

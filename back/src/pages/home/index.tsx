@@ -25,6 +25,7 @@ const Home = function () {
       <Button>测试</Button>
 
       <div className="border-b-8 border-purple-500 mt-5">test</div>
+      <div className='w-40 h-40 bg-blue-500 text-red-400 mt-5  rounded-md cursor-pointer flex justify-center items-center hover:shadow-lg'>hello</div>
     </div>
   )
 }

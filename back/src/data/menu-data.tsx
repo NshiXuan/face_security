@@ -24,23 +24,15 @@ export const menuData: MenuDataItem[] = [
     icon: <DashboardOutlined />,
   },
   {
-    label: '账户管理',
+    label: '用户管理',
     key: '/user',
     link: '/user',
     icon: <ReadOutlined />,
-    children: [
-      {
-        label: '账户列表',
-        key: '/user/list',
-        link: '/user/list',
-        icon: <FormOutlined />
-      },
-    ]
   },
   {
     label: '角色管理',
-    key: '/user/role',
-    link: '/user/role',
+    key: '/role',
+    link: '/role',
     icon: <UserOutlined />
   },
   {

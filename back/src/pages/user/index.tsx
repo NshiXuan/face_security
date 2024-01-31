@@ -13,7 +13,7 @@ import BaseModalForm from '@/components/base-modal-form'
 import useBaseModalForm from '@/hooks/useBaseModalForm'
 import { TestForm } from '@/components/base-form/test-form'
 
-const UserList = function () {
+const User = function () {
   const { rowSelection, pagination, loading, handleTableChange } = useTable()
   const { isModalOpen, showModal, handleCancel, form } = useBaseModalForm()
 
@@ -98,4 +98,4 @@ const UserList = function () {
   )
 }
 
-export default UserList
+export default User

@@ -2,7 +2,7 @@ import React, { lazy } from 'react'
 import { Navigate, RouteObject } from 'react-router-dom'
 
 const Login = lazy(() => import('@/pages/login'))
-const UserList = lazy(() => import('@/pages/user/user-list'))
+const User = lazy(() => import('@/pages/user'))
 const Home = lazy(() => import('@/pages/home'))
 const Role = lazy(() => import('@/pages/role'))
 const Face = lazy(() => import('@/pages/face'))
@@ -24,24 +24,11 @@ const routes: RouteObject[] = [
   },
   {
     path: '/user',
-    children: [
-      {
-        path: '',
-        element: <Navigate to={'/user/list'} />
-      },
-      {
-        path: 'list',
-        element: <UserList />
-      },
-      // {
-      //   path: 'list/:id',
-      //   element: <UserDetail />
-      // },
-      {
-        path: 'role',
-        element: <Role />
-      }
-    ]
+    element: <User />
+  },
+  {
+    path: '/role',
+    element: <Role />
   },
   {
     path: '/face',

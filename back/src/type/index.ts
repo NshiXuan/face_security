@@ -12,7 +12,7 @@ export interface IUser extends IBase {
   gender: number
   phone?: string
   address: string
-  // role: string | number
+  role: string | number
 }
 
 export interface IRole extends IBase {

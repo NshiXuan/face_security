@@ -53,7 +53,7 @@ export default function userForm() {
           value: 0
         }
       ],
-      rules: [{ require, message: '请选择性别' }]
+      rules: [{ required: true, message: '请选择性别' }]
     },
     {
       type: 'input',
@@ -62,6 +62,7 @@ export default function userForm() {
       placeholder: '请输入11位手机号',
       allowClear: true,
       rules: [
+        { required: true, message: '请输入手机号' },
         {
           pattern: /^1[3-9]\d{9}$/,
           message: '请输入正确的手机号,首位必须是1，第二位必须大于2'

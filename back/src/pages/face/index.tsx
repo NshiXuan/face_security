@@ -7,7 +7,7 @@ import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 import useTable from "@/hooks/useTable"
 import { faces } from "@/data/face-data"
 import { IFace } from "@/type"
-import { formatTimeV2 } from "@/utils"
+import { formatTimeV3 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import faceImg from '@/assets/img/pinia.png'
@@ -23,7 +23,6 @@ const Face = function () {
 
   useEffect(() => {
     videoEl?.setAttribute('src', 'https://img2022.cnblogs.com/blog/870258/202203/870258-20220315144436604-751520504.gif')
-
   }, [])
 
   async function getCamera() {
@@ -72,14 +71,14 @@ const Face = function () {
       title: '创建时间',
       dataIndex: 'ctime', // dataIndex必须映射好 不如render拿不到数据
       render: (value: number) => {
-        return <div>{value ? formatTimeV2(value) : '/'}</div>
+        return <div>{value ? formatTimeV3(value) : '/'}</div>
       }
     },
     {
       title: '更新时间',
       dataIndex: 'mtime',
       render: (value: number) => {
-        return <div>{value ? formatTimeV2(value) : '/'}</div>
+        return <div>{value ? formatTimeV3(value) : '/'}</div>
       }
     },
     {

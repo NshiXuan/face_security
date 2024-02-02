@@ -1,7 +1,8 @@
-import { FormInstance, Modal } from "antd"
 import React from "react"
 import { memo, ReactNode } from "react"
 import type { FC } from "react"
+
+import { Modal } from "antd"
 
 export interface IProps {
   open: boolean

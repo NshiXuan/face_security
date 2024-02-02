@@ -10,13 +10,13 @@ export interface IProps {
   title?: string
   cancelText?: string // 取消按钮文本
   okText?: string // 确认按钮文本
-  closeIcon?: boolean
-  width?: number
+  closeIcon?: boolean // 是否取消右上角的 x 
+  width?: number // 模态框宽度
   children?: ReactNode
 }
 
 // memo浅层比较
-const FaceModal: FC<IProps> = memo(function (props) {
+const BaseModal: FC<IProps> = memo(function (props) {
   const { open, title = '默认标题', closeIcon = true, handleCancel, cancelText = '取消', okText = '确认', width, handleOk, children } = props
 
   return (
@@ -40,7 +40,7 @@ const FaceModal: FC<IProps> = memo(function (props) {
   )
 })
 
-export default FaceModal
+export default BaseModal
 
 // 设置一个方便调试的name 可以不写 默认为组件名称
-FaceModal.displayName = "FaceModal"
+BaseModal.displayName = "BaseModal"

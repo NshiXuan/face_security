@@ -9,13 +9,11 @@ import { TestUserList } from '@/data/user-data'
 import useTable from '@/hooks/useTable'
 import { IUser } from '@/type'
 import { TestRoleList } from '@/data/role-data'
-import useBaseModalForm from '@/hooks/useBaseModalForm'
-import { TestForm } from '@/components/base-form/test-form'
-import BaseModalForm from '@/components/base-modal-form/base-modal-form'
+import useBaseModal from '@/hooks/useBaseModal'
 
 const User = function () {
   const { rowSelection, pagination, loading, handlePageChange } = useTable()
-  const { isModalOpen, handleCancelModal, handleOpenModal, form } = useBaseModalForm()
+  const { isModalOpen, handleCancelModal, handleOpenModal, form } = useBaseModal()
 
   // 映射表格的每一列
   const columns: ColumnsType<IUser> = [
@@ -75,7 +73,7 @@ const User = function () {
   return (
     <div className="px-5 ">
       <Button type="primary" className="mb-2">添加用户</Button>
-      {/* 表格 */}
+
       <Table
         rowKey={(record) => record.id}
         columns={columns}
@@ -84,16 +82,6 @@ const User = function () {
         pagination={{ ...pagination, total: TestUserList.length }}
         loading={loading}
         onChange={handlePageChange}
-      />
-
-      {/* 表单模态框 */}
-      <BaseModalForm
-        title="编辑"
-        isModalOpen={isModalOpen}
-        handleCancel={handleCancelModal}
-        data={TestForm}
-        form={form}
-        labelCol={3}
       />
     </div>
   )

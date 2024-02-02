@@ -7,16 +7,16 @@ import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 import useTable from "@/hooks/useTable"
 import { faces } from "@/data/face-data"
 import { IFace } from "@/type"
-import useBaseModalForm from "@/hooks/useBaseModalForm"
-import FaceModal from "@/components/base-modal-form/face-modal"
 import { formatTimeV2 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import faceImg from '@/assets/img/pinia.png'
+import BaseModal from "@/components/base-modal"
+import useBaseModal from "@/hooks/useBaseModal"
 
 const Face = function () {
   const { loading, rowSelection, pagination, handlePageChange } = useTable()
-  const { isModalOpen, handleCancelModal, handleOpenModal } = useBaseModalForm()
+  const { isModalOpen, handleCancelModal, handleOpenModal } = useBaseModal()
   const { form, handleFinish } = useBaseForm()
   // TODO(nsx): 将 videoEL 换成通过 Ref 获取
   const videoEl = document.getElementById('video')
@@ -112,6 +112,7 @@ const Face = function () {
   return (
     <div className="px-5">
       <Button type="primary" className="mb-2" onClick={handleOpenModal}>录入人脸</Button>
+
       <Table
         rowKey={(record) => record.id}
         columns={columns}
@@ -120,7 +121,8 @@ const Face = function () {
         loading={loading}
         pagination={pagination}
         onChange={handlePageChange} />
-      <FaceModal open={isModalOpen} title="人脸录入" width={800} handleCancel={handleCancelModal} handleOk={handleOk} >
+
+      <BaseModal open={isModalOpen} title="人脸录入" width={800} handleCancel={handleCancelModal} handleOk={handleOk} >
         <BaseForm form={form} data={faceForm} onFinish={handleFinish}>
           <video id="video" src="" autoPlay muted className="w-[800px] h-[500px]" ></video>
           <div>
@@ -128,7 +130,7 @@ const Face = function () {
             <img src={faceImg} alt="face" className="w-36 h-30" />
           </div>
         </BaseForm>
-      </FaceModal>
+      </BaseModal>
     </div >
   )
 }

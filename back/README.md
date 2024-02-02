@@ -27,10 +27,11 @@ pnpm start
   - 参考 base-form 目录中的数据定义表单
 
 - 模态框
-  - 引入封装好的 BaseModalForm
-  - 调用 useBaseModalForm Hook 方法配置 BaseModalForm，目前只支持普通的表单类型
-  - 在对应的打卡按钮配置 OnClick 打开 BaseModalForm
+  - 引入封装好的 BaseModal
+  - 调用 useBaseModal Hook 方法配置 BaseModal，目前只支持普通的表单类型
+  - 在对应的打卡按钮配置 OnClick 打开 BaseModal
   - Modal 宽度会根据子盒子撑开
+  - 可结合 BaseFrom 一起使用
   - NOTE: 如果要定义复杂的模态框，比如人脸识别，需要自定义
 
 ## 问题

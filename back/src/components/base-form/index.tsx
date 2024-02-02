@@ -1,4 +1,4 @@
-import React, { Children } from 'react'
+import React from 'react'
 import { memo, ReactNode, useEffect } from 'react'
 import type { FC } from 'react'
 
@@ -39,6 +39,7 @@ export interface IFormItem {
   // Note(nsx): 目前只有输入框这种才封装这两个属性 其它可以自行封装
   disabled?: boolean // 是否禁用
   defaultValue?: string | number // 默认值
+  value?: string | number // TODO: defaultValue 生效，value 不生效  
 }
 
 export interface IProps {
@@ -97,6 +98,7 @@ const BaseForm: FC<IProps> = memo(function (props) {
           size={item.size}
           disabled={item.disabled}
           defaultValue={item.defaultValue}
+          value={item.value}
         />
       )
     } else if (item.type === 'select') {
@@ -108,6 +110,7 @@ const BaseForm: FC<IProps> = memo(function (props) {
           options={item.options}
           disabled={item.disabled}
           defaultValue={item.defaultValue}
+          value={item.value}
         />
       )
     } else if (item.type === 'radio') {
@@ -129,6 +132,7 @@ const BaseForm: FC<IProps> = memo(function (props) {
           allowClear={item.allowClear}
           disabled={item.disabled}
           defaultValue={item.defaultValue}
+          value={item.value}
           rows={item.rows ? item.rows : 4}
         />
       )

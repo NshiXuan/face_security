@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 
-import { Button, Table, Tag } from 'antd'
+import { Button, Input, Space, Table, Tag } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
-import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
+import { FormOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 
 import { formatRole, formatTimeV3 } from '@/utils'
 import { TestUserList } from '@/data/user-data'
@@ -12,6 +12,7 @@ import BaseModal from '@/components/base-modal'
 import useBaseForm from '@/hooks/useBaseForm'
 import BaseForm from '@/components/base-form'
 import userForm from '@/components/base-form/user-form'
+import Search from 'antd/es/input/Search'
 
 const User = function () {
   const { rowSelection, pagination, loading, handlePageChange } = useTable()
@@ -27,14 +28,19 @@ const User = function () {
   }
 
   function handleOk() {
-    form
-      .validateFields()
-      .then((values) => {
-        form.resetFields()
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info)
-      })
+    form.validateFields().then((values) => {
+      form.resetFields()
+    }).catch((info) => {
+      console.log('Validate Failed:', info)
+    })
+  }
+
+  function handleSearch() {
+
+  }
+
+  function handleReset() {
+
   }
 
   const columns: ColumnsType<IUser> = [
@@ -106,7 +112,13 @@ const User = function () {
 
   return (
     <div className="px-5 ">
-      <Button type="primary" className="mb-2" onClick={handleOpen}>添加用户</Button>
+      <div className='mb-2 flex items-center gap-2'>
+        <Button type="primary" className='mr-4' onClick={handleOpen}>添加用户</Button>
+        <Space className='mr-2'>
+          <Search placeholder="请输入用户名" enterButton={<SearchOutlined />} onSearch={handleSearch} />
+        </Space>
+        <Button type="primary" onClick={handleReset}>重置</Button>
+      </div>
 
       <Table
         rowKey={(record) => record.id}

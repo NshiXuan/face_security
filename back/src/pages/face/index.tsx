@@ -35,16 +35,12 @@ const Face = function () {
   }
 
   function handleOk() {
-    form
-      .validateFields()
-      .then((values) => {
-        form.resetFields()
-      })
-      .catch((info) => {
-        console.log('Validate Failed:', info)
-      })
+    form.validateFields().then((values) => {
+      form.resetFields()
+    }).catch((info) => {
+      console.log('Validate Failed:', info)
+    })
   }
-
   const columns: ColumnsType<IFace> = [
     {
       title: '姓名',

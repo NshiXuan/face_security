@@ -1,10 +1,10 @@
 import { IFormItem } from '../base-form'
 
-export default function UserModalForm(options: any[]) {
+export default function userForm() {
   return [
     {
       type: 'input',
-      name: 'username',
+      name: 'name',
       label: '用户名',
       placeholder: '请输入用户名',
       allowClear: true,
@@ -17,11 +17,13 @@ export default function UserModalForm(options: any[]) {
       ]
     },
     {
-      type: 'input',
+      type: 'password',
       name: 'password',
       label: '密码',
       placeholder: '请输入密码',
       allowClear: true,
+      disabled: true,
+      defaultValue: 123456,
       rules: [
         { required: true, message: '密码不为空' },
         {
@@ -36,33 +38,22 @@ export default function UserModalForm(options: any[]) {
       ]
     },
     {
-      type: 'input',
-      name: 'confirmPassword',
-      label: '确认密码',
-      placeholder: '请再次输入密码',
+      type: 'select',
+      name: 'gender',
+      label: '性别',
+      placeholder: '请选择性别',
       allowClear: true,
-      rules: [
+      options: [
         {
-          required: true,
-          message: '请再次输入密码'
+          label: '男',
+          value: 1
         },
-        ({ getFieldValue }) => ({
-          validator(_, value) {
-            if (!value || getFieldValue('password') === value) {
-              return Promise.resolve()
-            }
-            return Promise.reject(new Error('两次输入的密码不一致'))
-          }
-        })
-      ]
-    },
-    {
-      type: 'input',
-      name: 'email',
-      label: '邮箱',
-      placeholder: '请输入邮箱',
-      allowClear: true,
-      rules: [{ type: 'email', message: '请输入正确的邮箱格式' }]
+        {
+          label: '女',
+          value: 0
+        }
+      ],
+      rules: [{ require, message: '请选择性别' }]
     },
     {
       type: 'input',
@@ -78,12 +69,12 @@ export default function UserModalForm(options: any[]) {
       ]
     },
     {
-      type: 'select',
-      name: 'role',
-      label: '角色',
-      placeholder: '请选择角色',
-      options,
-      rules: [{ required: true, message: '角色不为空' }]
+      type: 'input',
+      name: 'address',
+      label: '地址',
+      placeholder: '请输入居住地址',
+      allowClear: true,
+      rules: [{ required: true, message: '居住地址不能为空' }]
     }
   ] as IFormItem[]
 }

@@ -38,5 +38,3 @@ pnpm start
 
 - login 页面刷新时 loading 位置不正确
 
-## TODO
-- 根据 face-modal 重新封装 BaseModal

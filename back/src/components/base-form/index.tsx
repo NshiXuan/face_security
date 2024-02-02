@@ -35,6 +35,10 @@ export interface IFormItem {
   allowClear?: boolean
   rows?: number // textarea的行数
   size?: SizeType // 输入框尺寸
+
+  // Note(nsx): 目前只有输入框这种才封装这两个属性 其它可以自行封装
+  disabled?: boolean // 是否禁用
+  defaultValue?: string | number // 默认值
 }
 
 export interface IProps {
@@ -51,8 +55,6 @@ export interface IProps {
 
 // memo浅层比较
 const BaseForm: FC<IProps> = memo(function (props) {
-  console.log('🚀 ~ file: index.tsx:172 ~ BaseForm:', 'BaseForm')
-
   const {
     data,
     form,
@@ -82,6 +84,8 @@ const BaseForm: FC<IProps> = memo(function (props) {
           hidden={item.hidden}
           placeholder={item.placeholder}
           allowClear={item.allowClear}
+          disabled={item.disabled}
+          defaultValue={item.defaultValue}
           size={item.size}
         />
       )
@@ -91,6 +95,8 @@ const BaseForm: FC<IProps> = memo(function (props) {
           placeholder={item.placeholder}
           allowClear={item.allowClear}
           size={item.size}
+          disabled={item.disabled}
+          defaultValue={item.defaultValue}
         />
       )
     } else if (item.type === 'select') {
@@ -100,6 +106,8 @@ const BaseForm: FC<IProps> = memo(function (props) {
           style={{ width: 120 }}
           allowClear={item.allowClear}
           options={item.options}
+          disabled={item.disabled}
+          defaultValue={item.defaultValue}
         />
       )
     } else if (item.type === 'radio') {
@@ -119,6 +127,8 @@ const BaseForm: FC<IProps> = memo(function (props) {
         <TextArea
           placeholder={item.placeholder}
           allowClear={item.allowClear}
+          disabled={item.disabled}
+          defaultValue={item.defaultValue}
           rows={item.rows ? item.rows : 4}
         />
       )

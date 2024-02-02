@@ -6,11 +6,13 @@ export interface IBase {
 
 export interface IUser extends IBase {
   id: string | number
-  username: string
+  name: string
   password: string
-  email?: string
+  // email?: string
+  gender: number
   phone?: string
-  role: string | number
+  address: string
+  // role: string | number
 }
 
 export interface IRole extends IBase {

@@ -11,7 +11,7 @@ for (let i = 1; i <= 30; i++) {
     email: Random.email(),
     phone: '12312312311',
     role: Math.floor(Math.random() * 3 + 1),
-    createtime: new Date().getTime(),
-    updatetime: new Date().getTime()
+    ctime: new Date().getTime(),
+    mtime: new Date().getTime()
   })
 }

@@ -13,6 +13,7 @@ export interface IProps {
   title?: string
   initialValues?: any
   data: IFormItem[]
+  children?: ReactNode
 }
 
 const { RangePicker } = DatePicker
@@ -20,16 +21,15 @@ const { RangePicker } = DatePicker
 // memo浅层比较
 const BaseModalForm: FC<IProps> = memo(
   ({ open, onCreate, onCancel, title = '默认标题', initialValues, data }) => {
-    console.log('🚀 ~ file: index.tsx:145 ~ BaseModalForm:', 'BaseModalForm')
 
     const [form] = Form.useForm()
 
     useEffect(() => {
       initialValues
         ? form.setFieldsValue({
-            ...initialValues,
-            confirmPassword: initialValues.password
-          })
+          ...initialValues,
+          confirmPassword: initialValues.password
+        })
         : form.resetFields()
     }, [initialValues])
 

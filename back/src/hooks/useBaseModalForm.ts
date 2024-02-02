@@ -5,18 +5,18 @@ export default function useBaseModalForm() {
   const [form] = Form.useForm()
   const [isModalOpen, setIsModalOpen] = useState(false)
 
-  const showModal = () => {
+  const handleOpenModal = () => {
     setIsModalOpen(true)
   }
 
-  const handleCancel = () => {
+  const handleCancelModal = () => {
     setIsModalOpen(false)
   }
 
   return {
     isModalOpen,
-    showModal,
-    handleCancel,
+    handleOpenModal,
+    handleCancelModal,
     form
   }
 }

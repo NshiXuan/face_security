@@ -6,26 +6,21 @@ import useBaseForm from '@/hooks/useBaseForm'
 import { Button } from 'antd'
 
 const Home = function () {
-  const { form, onFinish } = useBaseForm()
+  const { form, handleFinish } = useBaseForm()
 
   return (
-    <div className=" p-5">
+    <div className="p-5">
       <BaseForm
         data={TestForm}
         form={form}
         maxWidth={500}
         labelCol={3}
-        onFinish={onFinish}
+        onFinish={handleFinish}
       >
         <Button type="primary" htmlType="submit">
           提交
         </Button>
       </BaseForm>
-
-      <Button>测试</Button>
-
-      <div className="border-b-8 border-purple-500 mt-5">test</div>
-      <div className='w-40 h-40 bg-blue-500 text-red-400 mt-5  rounded-md cursor-pointer flex justify-center items-center hover:shadow-lg'>hello</div>
     </div>
   )
 }

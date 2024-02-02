@@ -39,7 +39,7 @@ export interface IFormItem {
 
 export interface IProps {
   children?: ReactNode // submit类型的按钮
-  data: IFormItem[] // 映射表单列表的信息
+  data?: IFormItem[] // 映射表单列表的信息
   form: FormInstance<any> // 表单
   initialValues?: any // 默认值
   onFinish?: (values: any) => void // 提交的回调函数

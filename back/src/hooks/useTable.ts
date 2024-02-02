@@ -25,7 +25,7 @@ export default function useTable() {
   }
 
   // 点击下一页或者页数的改变
-  const handleTableChange = (newPagination: TablePaginationConfig) => {
+  const handlePageChange = (newPagination: TablePaginationConfig) => {
     // 1.重新发请求渲染数据
     const { current = 1, pageSize = 10 } = newPagination
 
@@ -38,6 +38,6 @@ export default function useTable() {
     rowSelection,
     pagination,
     loading,
-    handleTableChange
+    handlePageChange
   }
 }

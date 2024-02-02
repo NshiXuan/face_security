@@ -3,14 +3,14 @@ import { memo } from 'react'
 import type { FC } from 'react'
 
 import { Modal } from 'antd'
-import BaseForm, { IFormItem } from './base-form'
 import { FormInstance, FormLayout } from 'antd/es/form/Form'
+import BaseForm, { IFormItem } from '../base-form'
 
 export interface IProps {
   isModalOpen: boolean
   handleCancel: () => void
   onFinish?: (values: any) => void // 提交的回调函数
-  data: IFormItem[] // 表单列表信息
+  data?: IFormItem[] // 表单列表信息
   form: FormInstance<any> // 表单
   initialValues?: any // 默认值
   title?: string

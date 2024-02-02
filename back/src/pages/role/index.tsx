@@ -41,7 +41,8 @@ const Role = function () {
   ]
 
   return (
-    <div className="p-[20px] ">
+    <div className="px-5">
+      <Button type="primary" className="mb-2">添加角色</Button>
       {/* 表格 pagination 取消分页器 */}
       <Table
         rowKey={(record) => record.id}

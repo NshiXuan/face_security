@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 
 import useTable from '@/hooks/useTable'
 import { IRole } from '@/type'
@@ -7,8 +7,36 @@ import { Button, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { TestRoleList } from '@/data/role-data'
 
+import BaseModal from '@/components/base-modal'
+import useBaseForm from '@/hooks/useBaseForm'
+import BaseForm from '@/components/base-form'
+import roleForm from '@/components/base-form/role-form'
+
 const Role = function () {
   const { rowSelection, loading } = useTable()
+
+  const { form } = useBaseForm()
+  const [isOpen, setIsOpen] = useState(false)
+
+  function handleOpen() {
+    setIsOpen(true)
+  }
+
+  function handleCancel() {
+    setIsOpen(false)
+  }
+
+//?
+  function handleOk() {
+    form
+      .validateFields()
+      .then((values) => {
+        form.resetFields()
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info)
+      })
+  }
 
   // 映射表表格的每一列
   const columns: ColumnsType<IRole> = [
@@ -42,7 +70,7 @@ const Role = function () {
 
   return (
     <div className="px-5">
-      <Button type="primary" className="mb-2">添加角色</Button>
+      <Button type="primary" className="mb-2" onClick={handleOpen}>添加角色</Button>
       {/* 表格 pagination 取消分页器 */}
       <Table
         rowKey={(record) => record.id}
@@ -52,6 +80,10 @@ const Role = function () {
         dataSource={TestRoleList}
         loading={loading}
       />
+
+      <BaseModal open={isOpen} title='添加角色' handleCancel={handleCancel} handleOk={handleOk}>
+        <BaseForm form={form} data={roleForm()} labelCol={4}></BaseForm>
+      </BaseModal>
     </div>
   )
 }

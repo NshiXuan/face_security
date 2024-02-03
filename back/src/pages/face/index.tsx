@@ -17,11 +17,13 @@ const Face = function () {
   const { form, handleFinish } = useBaseForm()
   const [isOpen, setIsOpen] = useState(false)
   const [videoEl, setVideoEl] = useState<any>(null)
+  const [showEntryNote, setShowEntryNote] = useState(false)
+  let photoEl: HTMLCanvasElement
 
   async function getCamera() {
     try {
       // TODO(nsx): 将 videoEL 换成通过 Ref 获取
-      const v = document.getElementById('video') as any
+      const v = document.getElementById('video') as HTMLVideoElement
       setVideoEl(v)
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
       v.srcObject = mediaStream
@@ -33,24 +35,23 @@ const Face = function () {
   function closeCamera() {
     const stream = videoEl.srcObject;
     const tracks = stream.getTracks();
-
     tracks.forEach(function (track: any) {
       track.stop();
     });
-
     videoEl.srcObject = null;
   }
 
   function handleEntry() {
-    const photo = document.getElementById("photo") as HTMLCanvasElement
-    const ctx = photo.getContext('2d')
+    photoEl = document.getElementById("photo") as HTMLCanvasElement
+    const ctx = photoEl.getContext('2d')
     ctx?.drawImage(videoEl, 0, 0, 240, 180)
   }
 
   function clearPhoto() {
-    const photo = document.getElementById("photo") as HTMLCanvasElement;
-    const ctx = photo.getContext('2d');
-    ctx?.clearRect(0, 0, photo.width, photo.height);
+    if (photoEl) {
+      const ctx = photoEl.getContext('2d');
+      ctx?.clearRect(0, 0, photoEl.width, photoEl.height);
+    }
   }
 
   function handleOpen() {
@@ -66,13 +67,35 @@ const Face = function () {
 
   function handleOk() {
     form.validateFields().then((values) => {
-      form.resetFields()
-      closeCamera()
-      clearPhoto()
-      setIsOpen(false)
+      if (photoEl) {
+        const dataURL = photoEl.toDataURL("image/jpeg");
+        // TODO(nsx): 发送录入人脸请求
+        console.log("🚀 ~ form.validateFields ~ base64UrlToBlob(dataURL):", base64UrlToBlob(dataURL))
+
+        closeCamera()
+        clearPhoto()
+        setIsOpen(false)
+        form.resetFields()
+      }
+
+      setShowEntryNote(true)
     }).catch((info) => {
       console.log('Validate Failed:', info)
     })
+  }
+
+  // Note(nsx): File对象是Blob对象的子类。之所以File可以上传到服务器，是因为继承了Blob。所以你可以直接把Blob当文件传到服务器上。补充一下，之所以建议用Blob以上传文件的形式发送请求，是因为post请求中 body允许传递的字符长度是有限的，如果你直接把一个base64字符塞到body中，容易出现post请求body太长而导致请求失败
+  function base64UrlToBlob(url: string) {
+    // 去掉url的头，并转换为 byte
+    const bytes = window.atob(url.split(',')[1]);
+
+    // 处理异常,将 ascii 码小于 0 的转换为大于 0
+    const ab = new ArrayBuffer(bytes.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < bytes.length; i++) {
+      ia[i] = bytes.charCodeAt(i);
+    }
+    return new Blob([ab], { type: 'image/jpg' });
   }
 
   const columns: ColumnsType<IFace> = [
@@ -163,6 +186,7 @@ const Face = function () {
 
             <div>
               <div className="mb-2 font-bold">人脸预览</div>
+              {showEntryNote && <span className="text-red-500">请录入人脸</span>}
               <canvas id="photo" width={240} height={180} className="rounded-md"></canvas>
             </div>
           </div>

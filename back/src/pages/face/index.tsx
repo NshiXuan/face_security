@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React, { useEffect, useState } from "react"
 
 import { Table, Tag, Button } from "antd"
 import { ColumnsType } from "antd/es/table"
@@ -12,31 +12,75 @@ import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import faceImg from '@/assets/img/pinia.png'
 import BaseModal from "@/components/base-modal"
-import useBaseModal from "@/hooks/useBaseModal"
 
 const Face = function () {
   const { loading, rowSelection, pagination, handlePageChange } = useTable()
-  const { isModalOpen, handleCancelModal, handleOpenModal } = useBaseModal()
   const { form, handleFinish } = useBaseForm()
+  const [isOpen, setIsOpen] = useState(false)
   // TODO(nsx): 将 videoEL 换成通过 Ref 获取
-  const videoEl = document.getElementById('video')
+  const videoEl = document.getElementById('video') as any
 
   useEffect(() => {
-    videoEl?.setAttribute('src', 'https://img2022.cnblogs.com/blog/870258/202203/870258-20220315144436604-751520504.gif')
+    // const canvas = document.getElementById('canvas') as any;
+    // const context = canvas.getContext('2d');
+
+    // const tracker = new tracking.ObjectTracker('face');
+    // tracker.setInitialScale(4);
+    // tracker.setStepSize(2);
+    // tracker.setEdgesDensity(0.1);
+
+    // tracking.track('#video', tracker, { camera: true });
+
+    // tracker.on('track', function (event) {
+    //   context.clearRect(0, 0, canvas.width, canvas.height);
+
+    //   event.data.forEach(function (rect) {
+    //     context.strokeStyle = '#a64ceb';
+    //     context.strokeRect(rect.x, rect.y, rect.width, rect.height);
+    //     context.font = '11px Helvetica';
+    //     context.fillStyle = "#fff";
+    //     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
+    //     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
+    //   });
+    // });
   }, [])
+
 
   async function getCamera() {
     try {
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
       // videoEl?.setAttribute('src', mediaStream)
+      videoEl.srcObject = mediaStream
     } catch (error) {
       console.error("🚀 ~ getCamera ~ error:", error)
     }
   }
 
+  function closeCamera() {
+    const stream = videoEl.srcObject;
+    const tracks = stream.getTracks();
+
+    tracks.forEach(function (track: any) {
+      track.stop();
+    });
+
+    videoEl.srcObject = null;
+  }
+
+  function handleOpen() {
+    setIsOpen(true)
+    getCamera()
+  }
+
+  function handleCancel() {
+    setIsOpen(false)
+    closeCamera()
+  }
+
   function handleOk() {
     form.validateFields().then((values) => {
       form.resetFields()
+      closeCamera()
     }).catch((info) => {
       console.log('Validate Failed:', info)
     })
@@ -82,7 +126,7 @@ const Face = function () {
       render: (item: IFace) => {
         return (
           <div className="flex gap-3 ">
-            <Button type="primary" icon={<FormOutlined />} onClick={handleOpenModal}>
+            <Button type="primary" icon={<FormOutlined />} onClick={handleOpen}>
               编辑
             </Button>
             <Button type="primary" icon={<DeleteOutlined />} danger>
@@ -106,7 +150,7 @@ const Face = function () {
 
   return (
     <div className="px-5">
-      <Button type="primary" className="mb-2" onClick={handleOpenModal}>录入人脸</Button>
+      <Button type="primary" className="mb-2" onClick={handleOpen}>录入人脸</Button>
 
       <Table
         rowKey={(record) => record.id}
@@ -117,9 +161,12 @@ const Face = function () {
         pagination={pagination}
         onChange={handlePageChange} />
 
-      <BaseModal open={isModalOpen} title="人脸录入" width={800} handleCancel={handleCancelModal} handleOk={handleOk} >
+      <BaseModal open={isOpen} title="人脸录入" width={800} handleCancel={handleCancel} handleOk={handleOk} >
         <BaseForm form={form} data={faceForm} onFinish={handleFinish}>
-          <video id="video" src="" autoPlay muted className="w-[800px] h-[500px]" ></video>
+          <div className="relative">
+            <video id="video" loop autoPlay muted className="w-[800px] h-[500px] bg-blue-300 absolute top-0 left-0 " ></video>
+            <canvas id="canvas" className="w-[800px] h-[500px]  "></canvas>
+          </div>
           <div>
             <div className="py-2 font-bold">人脸预览</div>
             <img src={faceImg} alt="face" className="w-36 h-30" />

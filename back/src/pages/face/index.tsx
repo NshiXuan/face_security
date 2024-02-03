@@ -10,47 +10,21 @@ import { IFace } from "@/type"
 import { formatTimeV3 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
-import faceImg from '@/assets/img/pinia.png'
 import BaseModal from "@/components/base-modal"
 
 const Face = function () {
   const { loading, rowSelection, pagination, handlePageChange } = useTable()
   const { form, handleFinish } = useBaseForm()
   const [isOpen, setIsOpen] = useState(false)
-  // TODO(nsx): 将 videoEL 换成通过 Ref 获取
-  const videoEl = document.getElementById('video') as any
-
-  useEffect(() => {
-    // const canvas = document.getElementById('canvas') as any;
-    // const context = canvas.getContext('2d');
-
-    // const tracker = new tracking.ObjectTracker('face');
-    // tracker.setInitialScale(4);
-    // tracker.setStepSize(2);
-    // tracker.setEdgesDensity(0.1);
-
-    // tracking.track('#video', tracker, { camera: true });
-
-    // tracker.on('track', function (event) {
-    //   context.clearRect(0, 0, canvas.width, canvas.height);
-
-    //   event.data.forEach(function (rect) {
-    //     context.strokeStyle = '#a64ceb';
-    //     context.strokeRect(rect.x, rect.y, rect.width, rect.height);
-    //     context.font = '11px Helvetica';
-    //     context.fillStyle = "#fff";
-    //     context.fillText('x: ' + rect.x + 'px', rect.x + rect.width + 5, rect.y + 11);
-    //     context.fillText('y: ' + rect.y + 'px', rect.x + rect.width + 5, rect.y + 22);
-    //   });
-    // });
-  }, [])
-
+  const [videoEl, setVideoEl] = useState<any>(null)
 
   async function getCamera() {
     try {
+      // TODO(nsx): 将 videoEL 换成通过 Ref 获取
+      const v = document.getElementById('video') as any
+      setVideoEl(v)
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })
-      // videoEl?.setAttribute('src', mediaStream)
-      videoEl.srcObject = mediaStream
+      v.srcObject = mediaStream
     } catch (error) {
       console.error("🚀 ~ getCamera ~ error:", error)
     }
@@ -67,6 +41,18 @@ const Face = function () {
     videoEl.srcObject = null;
   }
 
+  function handleEntry() {
+    const photo = document.getElementById("photo") as HTMLCanvasElement
+    const ctx = photo.getContext('2d')
+    ctx?.drawImage(videoEl, 0, 0, 240, 180)
+  }
+
+  function clearPhoto() {
+    const photo = document.getElementById("photo") as HTMLCanvasElement;
+    const ctx = photo.getContext('2d');
+    ctx?.clearRect(0, 0, photo.width, photo.height);
+  }
+
   function handleOpen() {
     setIsOpen(true)
     getCamera()
@@ -75,16 +61,20 @@ const Face = function () {
   function handleCancel() {
     setIsOpen(false)
     closeCamera()
+    clearPhoto()
   }
 
   function handleOk() {
     form.validateFields().then((values) => {
       form.resetFields()
       closeCamera()
+      clearPhoto()
+      setIsOpen(false)
     }).catch((info) => {
       console.log('Validate Failed:', info)
     })
   }
+
   const columns: ColumnsType<IFace> = [
     {
       title: '姓名',
@@ -161,15 +151,20 @@ const Face = function () {
         pagination={pagination}
         onChange={handlePageChange} />
 
-      <BaseModal open={isOpen} title="人脸录入" width={800} handleCancel={handleCancel} handleOk={handleOk} >
-        <BaseForm form={form} data={faceForm} onFinish={handleFinish}>
-          <div className="relative">
-            <video id="video" loop autoPlay muted className="w-[800px] h-[500px] bg-blue-300 absolute top-0 left-0 " ></video>
-            <canvas id="canvas" className="w-[800px] h-[500px]  "></canvas>
-          </div>
-          <div>
-            <div className="py-2 font-bold">人脸预览</div>
-            <img src={faceImg} alt="face" className="w-36 h-30" />
+      <BaseModal open={isOpen} title="人脸录入" width={1200} handleCancel={handleCancel} handleOk={handleOk} >
+        <BaseForm form={form} data={faceForm} childLayout="left" onFinish={handleFinish}>
+          <div className="flex gap-4 ">
+            <div>
+              <video id="video" width={800} height={600} loop autoPlay muted className="rounded-md"></video>
+              <div className="mt-2 flex justify-center">
+                <Button type="primary" onClick={handleEntry} >录入</Button>
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-2 font-bold">人脸预览</div>
+              <canvas id="photo" width={240} height={180} className="rounded-md"></canvas>
+            </div>
           </div>
         </BaseForm>
       </BaseModal>

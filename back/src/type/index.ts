@@ -1,3 +1,9 @@
+export interface IResp<T = any> {
+  code: number
+  msg: string
+  data?: T
+}
+
 export interface IBase {
   id: string | number
   ctime?: number

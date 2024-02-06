@@ -38,3 +38,7 @@ pnpm start
 
 - login 页面刷新时 loading 位置不正确
 
+## TODO
+- axios config invalid
+- web proxy cors
+- face form note

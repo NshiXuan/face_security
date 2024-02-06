@@ -1,16 +1,18 @@
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
-import { Table, Tag, Button } from "antd"
+import { Table, Tag, Button, message } from "antd"
 import { ColumnsType } from "antd/es/table"
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 
 import useTable from "@/hooks/useTable"
 import { faces } from "@/data/face-data"
-import { IFace } from "@/type"
+import { IFace, IResp } from "@/type"
 import { formatTimeV3 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import BaseModal from "@/components/base-modal"
+import { createFace, findFace } from "@/service/face"
+import axios, { AxiosResponse } from "axios"
 
 const Face = function () {
   const { loading, rowSelection, pagination, handlePageChange } = useTable()
@@ -41,10 +43,61 @@ const Face = function () {
     videoEl.srcObject = null;
   }
 
-  function handleEntry() {
+  function handleCreate() {
     photoEl = document.getElementById("photo") as HTMLCanvasElement
     const ctx = photoEl.getContext('2d')
     ctx?.drawImage(videoEl, 0, 0, 240, 180)
+
+    form.validateFields().then(async (values: { name: string }) => {
+      if (photoEl) {
+        const dataURL = photoEl.toDataURL("image/jpeg");
+        const param = new FormData()
+        param.append("name", values.name)
+        param.append("file", base64UrlToBlob(dataURL))
+
+        // TODO(nsx): 使用封装的 axios 、回值类型、 message 类型
+        axios.post('http://localhost:8088/api/v1/face/create', param, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }).then((res: AxiosResponse<IResp<{ name: string }>>) => {
+          message.open({
+            type: "success",
+            content: res.data.msg
+          })
+        })
+      } else {
+        setShowEntryNote(true)
+      }
+    }).catch(err => {
+      console.log("🚀 ~ form.validateFields ~ err:", err)
+    })
+  }
+
+  function handleRecognition() {
+    photoEl = document.getElementById("photo") as HTMLCanvasElement
+    const ctx = photoEl.getContext('2d')
+    ctx?.drawImage(videoEl, 0, 0, 240, 180)
+    const dataURL = photoEl.toDataURL("image/jpeg");
+    const param = new FormData()
+    param.append("file", base64UrlToBlob(dataURL))
+    axios.post('http://localhost:8088/api/v1/face', param, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }).then((res: AxiosResponse<IResp>) => {
+      if (res.data.code == 200) {
+        message.open({
+          type: "success",
+          content: res.data.data?.name
+        })
+      } else {
+        message.open({
+          type: "success",
+          content: res.data.msg
+        })
+      }
+    })
   }
 
   function clearPhoto() {
@@ -63,22 +116,19 @@ const Face = function () {
     setIsOpen(false)
     closeCamera()
     clearPhoto()
+    form.resetFields()
   }
 
   function handleOk() {
-    form.validateFields().then((values) => {
+    form.validateFields().then(async (values: { name: string }) => {
       if (photoEl) {
-        const dataURL = photoEl.toDataURL("image/jpeg");
-        // TODO(nsx): 发送录入人脸请求
-        console.log("🚀 ~ form.validateFields ~ base64UrlToBlob(dataURL):", base64UrlToBlob(dataURL))
-
         closeCamera()
         clearPhoto()
         setIsOpen(false)
         form.resetFields()
+      } else {
+        setShowEntryNote(true)
       }
-
-      setShowEntryNote(true)
     }).catch((info) => {
       console.log('Validate Failed:', info)
     })
@@ -179,8 +229,9 @@ const Face = function () {
           <div className="flex gap-4 ">
             <div>
               <video id="video" width={800} height={600} loop autoPlay muted className="rounded-md"></video>
-              <div className="mt-2 flex justify-center">
-                <Button type="primary" onClick={handleEntry} >录入</Button>
+              <div className="mt-2 flex justify-center gap-3">
+                <Button type="primary" onClick={handleCreate} >录入</Button>
+                <Button type="primary" onClick={handleRecognition} >识别</Button>
               </div>
             </div>
 
@@ -198,5 +249,3 @@ const Face = function () {
 
 export default Face
 
-// 设置一个方便调试的name 可以不写 默认为组件名称
-Face.displayName = "Face"

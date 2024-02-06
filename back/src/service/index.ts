@@ -1,9 +1,9 @@
 import { message } from 'antd'
 import axios from 'axios'
-import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import type { AxiosInstance, AxiosRequestConfig, AxiosRequestHeaders, AxiosResponse } from 'axios'
 
-export const BASE_URL =
-  process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : ''
+// export const BASE_URL = process.env.NODE_ENV === 'development' ? 'http://localhost:8088/api/v1' : ''
+export const BASE_URL = "http://localhost:8088/api/v1"
 export const TIME_OUT = 5000
 
 class Request {
@@ -18,6 +18,8 @@ class Request {
     // 5.封装拦截器
     this.instance.interceptors.request.use(
       (config) => {
+        console.log("🚀 ~ Request ~ constructor ~ config:", config)
+        config.headers = { ...config.headers } as AxiosRequestHeaders
         return config
       },
       (err) => {
@@ -25,57 +27,6 @@ class Request {
       }
     )
 
-    this.instance.interceptors.response.use(
-      (res) => {
-        return res
-      },
-      (err) => {
-        const { response } = err
-
-        if (response && response.status) {
-          switch (response.status) {
-            case 400:
-              message.error('请求错误')
-              break
-            case 401:
-              message.error('未授权，请登录')
-              break
-            case 403:
-              message.error('拒绝访问')
-              break
-            case 404:
-              message.error(`请求地址出错: ${response.config.url}`)
-              break
-            case 408:
-              message.error('请求超时')
-              break
-            case 500:
-              message.error('服务器内部错误')
-              break
-            case 501:
-              message.error('服务未实现')
-              break
-            case 502:
-              message.error('网关错误')
-              break
-            case 503:
-              message.error('服务不可用')
-              break
-            case 504:
-              message.error('服务超时')
-              break
-            case 505:
-              message.error('HTTP版本不受支持')
-              break
-            default:
-              message.error('网络错误')
-          }
-        } else {
-          message.error('网络错误')
-        }
-        return err
-      }
-    )
   }
 
   // 3.封装公共的request函数

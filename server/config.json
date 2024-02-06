@@ -1,0 +1,12 @@
+{
+  "server": {
+    "port": 8088
+  },
+  "mysql": {
+    "user": "root",
+    "password": "@Codersx123",
+    "host": "172.17.0.1",
+    "port": 3306,
+    "database": "face_security"
+  }
+}

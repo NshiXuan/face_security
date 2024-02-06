@@ -69,3 +69,11 @@ func RespSuccess(c *gin.Context, data any) {
 		Data: data,
 	})
 }
+
+func RespSuccessWithMsg(c *gin.Context, msg string, data any) {
+	c.JSON(http.StatusOK, &Resp{
+		Code: CodeSuccess,
+		Msg:  msg,
+		Data: data,
+	})
+}

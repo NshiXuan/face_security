@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
-	"server/controller"
 	"server/global"
+	"server/models"
 	"server/router"
 
 	"gorm.io/driver/mysql"
@@ -43,7 +43,7 @@ func main() {
 	}
 
 	// 加载 Model
-	controller.NewRecognise()
+	models.NewRecognise()
 
 	r := router.InitRouter()
 

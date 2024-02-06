@@ -86,7 +86,7 @@ const Face = function () {
         "Content-Type": "multipart/form-data"
       }
     }).then((res: AxiosResponse<IResp>) => {
-      if (res.data.code == 200) {
+      if (res.data.code == 1000) {
         message.open({
           type: "success",
           content: res.data.data?.name

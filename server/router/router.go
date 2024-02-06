@@ -13,8 +13,8 @@ func InitRouter() *gin.Engine {
 	r.Use(middleware.Cors())
 	apiRouter := r.Group("api").Group("v1")
 	faceRouter := apiRouter.Group("face")
-	faceRouter.POST("/create", controller.Create)
-	faceRouter.POST("", controller.Find)
+	faceRouter.POST("/create", controller.CreateFace)
+	faceRouter.POST("", controller.FindFace)
 
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{

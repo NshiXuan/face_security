@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"os"
 	"server/global"
-	"server/models"
 	"server/router"
 
 	"gorm.io/driver/mysql"
@@ -41,17 +40,15 @@ func main() {
 	if err := initMysql(); err != nil {
 		panic(err)
 	}
-
 	// 加载 Model
-	models.NewRecognise()
-
+	global.NewRecognise()
+	if err := global.InitFaceSamples(); err != nil {
+		fmt.Printf("init face samples err: %v\n", err)
+	}
 	r := router.InitRouter()
-
 	// TODO(nsx): init log
-
 	if err := r.Run(fmt.Sprintf(":%d", global.Config.Server.Port)); err != nil {
 		panic(err)
 	}
-
 	// TODO(nsx): 优雅退出？
 }

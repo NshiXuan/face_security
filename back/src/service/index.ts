@@ -18,7 +18,6 @@ class Request {
     // 5.封装拦截器
     this.instance.interceptors.request.use(
       (config) => {
-        console.log("🚀 ~ Request ~ constructor ~ config:", config)
         config.headers = { ...config.headers } as AxiosRequestHeaders
         return config
       },

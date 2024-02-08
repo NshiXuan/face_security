@@ -42,3 +42,4 @@ pnpm start
 - axios config invalid
 - web proxy cors
 - face form note
+- face rec message category

@@ -16,7 +16,7 @@ func CreateFace(ctx *gin.Context) {
 	}
 	msg, err := service.CreateFace(&req)
 	if err != nil {
-		RespErrorWithMsg(ctx, CodeServerBusy, err)
+		RespErrorWithMsg(ctx, CodeServerBusy, err.Error())
 		return
 	}
 	RespSuccessWithMsg(ctx, msg, nil)
@@ -31,6 +31,16 @@ func FindFace(ctx *gin.Context) {
 	resp, err := service.FindFace(&req)
 	if err != nil {
 		RespErrorWithMsg(ctx, CodeServerBusy, err.Error())
+		return
+	}
+	RespSuccess(ctx, resp)
+}
+
+func FindFaceList(ctx *gin.Context) {
+	resp, err := service.FindFaceList()
+	if err != nil {
+		RespErrorWithMsg(ctx, CodeServerBusy, err.Error())
+		return
 	}
 	RespSuccess(ctx, resp)
 }

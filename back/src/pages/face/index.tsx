@@ -1,17 +1,17 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 
 import { Table, Tag, Button, message } from "antd"
 import { ColumnsType } from "antd/es/table"
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
 
 import useTable from "@/hooks/useTable"
-import { faces } from "@/data/face-data"
+import { faces as testFaces } from "@/data/face-data"
 import { IFace, IResp } from "@/type"
 import { formatTimeV3 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import BaseModal from "@/components/base-modal"
-import { createFace, findFace } from "@/service/face"
+import { createFace, findFace, getFaceList } from "@/service/face"
 import axios, { AxiosResponse } from "axios"
 
 const Face = function () {
@@ -20,7 +20,15 @@ const Face = function () {
   const [isOpen, setIsOpen] = useState(false)
   const [videoEl, setVideoEl] = useState<any>(null)
   const [showEntryNote, setShowEntryNote] = useState(false)
+  const [faces, setFaces] = useState<IFace[]>()
   let photoEl: HTMLCanvasElement
+
+  useEffect(() => {
+    getFaceList().then(res => {
+      setFaces([...testFaces, ...res.data!])
+    })
+  }, [])
+
 
   async function getCamera() {
     try {
@@ -158,7 +166,7 @@ const Face = function () {
     },
     {
       title: '人脸图片',
-      dataIndex: 'image',
+      dataIndex: 'image_url',
       render: (image: string) => {
         return <Tag color="blue">{image}</Tag>
       }

@@ -34,6 +34,6 @@ export interface ILoginUser {
 
 export interface IFace extends IBase {
   name: string
-  image: string
-  remake: string
+  image_url: string
+  remake?: string
 }

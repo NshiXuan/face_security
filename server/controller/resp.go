@@ -20,33 +20,31 @@ type Code int64
 // - 415 Unsupported Media Type 服务器无法处理请求附带的媒体格式
 // - 500 Internal Server Error  服务端异常
 const (
-	CodeSuccess Code = 1000 + iota
-	CodeInvalidParam
-	CodeUserExist
-	CodeUserNotExist
-	CodeInvalidPassword
-	CodeServerBusy
-
-	CodeInvalidToken
-	CodeNeedLogin
+	CodeOK                  Code = 200
+	CodeFound               Code = 302
+	CodeBadRequest          Code = 400
+	CodeUnauthorized        Code = 401
+	CodeForbidden           Code = 403
+	CodeNotFound            Code = 404
+	CodeRequestTimeOut      Code = 408
+	CodeInternalServerError Code = 500
 )
 
 var codeMsg = map[Code]string{
-	CodeSuccess:         "success",
-	CodeInvalidParam:    "请求参数错误",
-	CodeUserExist:       "用户已存在",
-	CodeUserNotExist:    "用户名不存在",
-	CodeInvalidPassword: "用户名或密码错误",
-	CodeServerBusy:      "服务繁忙",
-
-	CodeInvalidToken: "无效的token",
-	CodeNeedLogin:    "需要登录",
+	CodeOK:                  "OK",
+	CodeFound:               "Found",
+	CodeBadRequest:          "Bad Request",
+	CodeUnauthorized:        "Unauthorized",
+	CodeForbidden:           "Forbidden",
+	CodeNotFound:            "Not Found ",
+	CodeRequestTimeOut:      "Request Time-out",
+	CodeInternalServerError: "Internal Server Error",
 }
 
 func (c Code) Msg() string {
 	msg, ok := codeMsg[c]
 	if !ok {
-		msg = codeMsg[CodeServerBusy]
+		msg = codeMsg[CodeInternalServerError]
 	}
 	return msg
 }
@@ -75,15 +73,15 @@ func RespErrorWithMsg(c *gin.Context, code Code, msg any) {
 
 func RespSuccess(c *gin.Context, data any) {
 	c.JSON(http.StatusOK, &Resp{
-		Code: CodeSuccess,
-		Msg:  CodeSuccess.Msg(),
+		Code: CodeOK,
+		Msg:  CodeOK.Msg(),
 		Data: data,
 	})
 }
 
 func RespSuccessWithMsg(c *gin.Context, msg string, data any) {
 	c.JSON(http.StatusOK, &Resp{
-		Code: CodeSuccess,
+		Code: CodeOK,
 		Msg:  msg,
 		Data: data,
 	})

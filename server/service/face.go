@@ -86,10 +86,18 @@ func FindFace(req *schemas.FaceFindReq) (*schemas.FindFaceResp, error) {
 	}, nil
 }
 
-func FindFaceList() ([]schemas.Face, error) {
+func GetFaceList() ([]schemas.Face, error) {
 	var faces []schemas.Face
 	if err := global.DB.Find(&faces).Error; err != nil {
 		return nil, err
 	}
 	return faces, nil
+}
+
+func RemoveFace(id int64) error {
+	var face schemas.Face
+	if err := global.DB.Delete(&face, id).Error; err != nil {
+		return err
+	}
+	return nil
 }

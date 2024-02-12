@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
-import { Button, Input, Space, Table, Tag } from 'antd'
+import { Button, Popconfirm, Space, Table, Tag, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table'
 import { FormOutlined, DeleteOutlined, SearchOutlined } from '@ant-design/icons'
 
@@ -18,6 +18,16 @@ const User = function () {
   const { rowSelection, pagination, loading, handlePageChange } = useTable()
   const { form } = useBaseForm()
   const [isOpen, setIsOpen] = useState(false)
+  const [users, setUsers] = useState<IUser[]>()
+
+  useEffect(() => {
+    handleGetUserList()
+  }, [])
+
+  function handleGetUserList() {
+    setUsers([...TestUserList])
+  }
+
 
   function handleOpen() {
     setIsOpen(true)
@@ -35,11 +45,24 @@ const User = function () {
     })
   }
 
-  function handleSearch() {
-
+  // TODO(nsx): 手机号 地址搜索
+  function handleSearch(name: string) {
+    if (name.trim() == '') {
+      return message.warning('请输入搜索内容')
+    }
+    const searchUsers = TestUserList.filter(item => item.name.includes(name))
+    setUsers(searchUsers)
   }
 
   function handleReset() {
+    handleGetUserList()
+  }
+
+  function handleConfirm(id: number) {
+
+  }
+
+  function handleBatchDelete() {
 
   }
 
@@ -76,7 +99,7 @@ const User = function () {
       title: '角色',
       dataIndex: 'role',
       render: (role: number) => {
-        return <Tag color="success">{formatRole(role)}</Tag>
+        return <Tag color={role == 3 ? 'blue' : 'success'}>{formatRole(role)}</Tag>
       }
     },
     {
@@ -98,12 +121,10 @@ const User = function () {
       render: (item: IUser) => {
         return (
           <div className="flex gap-3 ">
-            <Button type="primary" icon={<FormOutlined />} onClick={handleOpen}>
-              编辑
-            </Button>
-            <Button type="primary" icon={<DeleteOutlined />} danger>
-              删除
-            </Button>
+            <Button type="primary" icon={<FormOutlined />} onClick={handleOpen}>编辑</Button>
+            <Popconfirm title="确认删除吗？" cancelText="取消" okText="确认" onConfirm={() => handleConfirm(item.id)}>
+              <Button type="primary" icon={<DeleteOutlined />} danger>删除</Button>
+            </Popconfirm>
           </div>
         )
       }
@@ -124,7 +145,7 @@ const User = function () {
         rowKey={(record) => record.id}
         columns={columns}
         rowSelection={rowSelection}
-        dataSource={TestUserList}
+        dataSource={users}
         pagination={{ ...pagination, total: TestUserList.length }}
         loading={loading}
         onChange={handlePageChange}

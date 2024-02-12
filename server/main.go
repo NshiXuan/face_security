@@ -41,7 +41,6 @@ func main() {
 		panic(err)
 	}
 	// 加载 Model
-	global.NewRecognise()
 	if err := global.InitFaceSamples(); err != nil {
 		fmt.Printf("init face samples err: %v\n", err)
 	}

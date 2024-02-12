@@ -9,6 +9,7 @@ import (
 	"time"
 )
 
+// TODO(nsx): 删除在创建会出现数据已存在
 func CreateFace(req *schemas.FaceCreateReq) (string, error) {
 	name := req.Name
 	file := req.File
@@ -29,14 +30,11 @@ func CreateFace(req *schemas.FaceCreateReq) (string, error) {
 		return "未检出到人脸数据", nil
 	}
 	id := rec.ClassifyThreshold(face.Descriptor, 0.3)
+	fmt.Printf("rec: %v\n", rec)
+	fmt.Printf("id: %v\n", id)
 	if id > 0 {
 		return "数据已存在,无需重复录入", nil
 	}
-
-	faceData := global.FaceData
-	faceData.Samples = append(faceData.Samples, face.Descriptor)
-	faceData.Ids = append(faceData.Ids, int32(len(faceData.Ids)+1))
-	rec.SetSamples(faceData.Samples, faceData.Ids)
 
 	filename := time.Now().Unix()
 	path := fmt.Sprintf("./images/%d.jpeg", filename)
@@ -50,6 +48,11 @@ func CreateFace(req *schemas.FaceCreateReq) (string, error) {
 	if err := global.DB.Save(&sface).Error; err != nil {
 		return "", err
 	}
+	// TODO(nsx): 这一段应该用事务
+	faceData := global.FaceData
+	faceData.Samples = append(faceData.Samples, face.Descriptor)
+	faceData.Ids = append(faceData.Ids, int32(sface.ID))
+	rec.SetSamples(faceData.Samples, faceData.Ids)
 	return "录入成功", nil
 }
 
@@ -72,6 +75,7 @@ func FindFace(req *schemas.FaceFindReq) (*schemas.FindFaceResp, error) {
 		return nil, fmt.Errorf("未检出到人脸数据")
 	}
 	id := rec.ClassifyThreshold(sampleFace.Descriptor, 0.3)
+	fmt.Printf("find id: %v\n", id)
 	if id < 0 {
 		return nil, fmt.Errorf("人脸数据不存在")
 	}
@@ -99,5 +103,9 @@ func RemoveFace(id int64) error {
 	if err := global.DB.Delete(&face, id).Error; err != nil {
 		return err
 	}
+	// TODO(nsx): 从 sample 中删除与删除对应的 images
+
+	// 重新 init rec and sample
+	global.InitFaceSamples()
 	return nil
 }

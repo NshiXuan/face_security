@@ -8,12 +8,12 @@ export const TestRoleList: IRole[] = [
   },
   {
     id: 2,
-    name: '项目经理',
-    description: '拥有部分权限'
+    name: '业主',
+    description: '小区住户'
   },
   {
     id: 3,
-    name: '程序猿',
+    name: '安保',
     description: '打工人一枚'
   }
 ]

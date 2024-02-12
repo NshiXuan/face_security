@@ -1,10 +1,11 @@
 import { IFace } from "@/type";
 import { Random } from "mockjs";
 
-export const faces: IFace[] = []
+export const TestFaces: IFace[] = []
 
 for (let i = 1; i <= 20; i++) {
-  faces.push({
+  // console.log("🚀 ~ Random.id():", Random.id())
+  TestFaces.push({
     id: i,
     name: Random.cname(),
     image_url: Random.image(),

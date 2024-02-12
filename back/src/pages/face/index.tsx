@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react"
 
-import { Table, Tag, Button, message } from "antd"
+import { Table, Tag, Button, message, Popconfirm, Space } from "antd"
 import { ColumnsType } from "antd/es/table"
-import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
+import { DeleteOutlined, FormOutlined, SearchOutlined } from '@ant-design/icons'
 
 import useTable from "@/hooks/useTable"
-import { faces as testFaces } from "@/data/face-data"
+import { TestFaces } from "@/data/face-data"
 import { IFace, IResp } from "@/type"
 import { formatTimeV3 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import BaseModal from "@/components/base-modal"
-import { createFace, findFace, getFaceList } from "@/service/face"
+import { createFace, deleteFace, findFace, getFaceList } from "@/service/face"
 import axios, { AxiosResponse } from "axios"
+import Search from "antd/es/input/Search"
 
 const Face = function () {
   const { loading, rowSelection, pagination, handlePageChange } = useTable()
@@ -24,10 +25,14 @@ const Face = function () {
   let photoEl: HTMLCanvasElement
 
   useEffect(() => {
-    getFaceList().then(res => {
-      setFaces([...testFaces, ...res.data!])
-    })
+    handleGetFaceList()
   }, [])
+
+  function handleGetFaceList() {
+    getFaceList().then(res => {
+      setFaces([...TestFaces, ...res.data!])
+    })
+  }
 
 
   async function getCamera() {
@@ -134,6 +139,7 @@ const Face = function () {
         clearPhoto()
         setIsOpen(false)
         form.resetFields()
+        handleGetFaceList()
       } else {
         setShowEntryNote(true)
       }
@@ -154,6 +160,27 @@ const Face = function () {
       ia[i] = bytes.charCodeAt(i);
     }
     return new Blob([ab], { type: 'image/jpg' });
+  }
+
+  function handleConfirm(id: number) {
+    deleteFace(id).then(res => {
+      if (res.code == 200) {
+        handleGetFaceList()
+        message.success("删除成功!")
+      }
+    })
+  }
+
+  function handleSearch(name: string) {
+    if (name.trim() == '') {
+      return message.warning('请输入搜索内容')
+    }
+    const searchFaces = TestFaces.filter(item => item.name.includes(name))
+    setFaces(searchFaces)
+  }
+
+  function handleReset() {
+    handleGetFaceList()
   }
 
   const columns: ColumnsType<IFace> = [
@@ -197,12 +224,10 @@ const Face = function () {
       render: (item: IFace) => {
         return (
           <div className="flex gap-3 ">
-            <Button type="primary" icon={<FormOutlined />} onClick={handleOpen}>
-              编辑
-            </Button>
-            <Button type="primary" icon={<DeleteOutlined />} danger>
-              删除
-            </Button>
+            <Button type="primary" icon={<FormOutlined />} onClick={handleOpen}>编辑</Button>
+            <Popconfirm title="确认删除吗？" cancelText="取消" okText="确认" onConfirm={() => handleConfirm(item.id)}>
+              <Button type="primary" icon={<DeleteOutlined />} danger>删除</Button>
+            </Popconfirm>
           </div>
         )
       }
@@ -221,7 +246,13 @@ const Face = function () {
 
   return (
     <div className="px-5">
-      <Button type="primary" className="mb-2" onClick={handleOpen}>录入人脸</Button>
+      <div className="mb-2 flex items-center gap-2">
+        <Button type="primary" className="mr-4" onClick={handleOpen}>录入人脸</Button>
+        <Space className='mr-2'>
+          <Search placeholder="请输入用户名" enterButton={<SearchOutlined />} onSearch={handleSearch} />
+        </Space>
+        <Button type="primary" onClick={handleReset}>重置</Button>
+      </div>
 
       <Table
         rowKey={(record) => record.id}

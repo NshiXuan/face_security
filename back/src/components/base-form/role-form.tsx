@@ -16,7 +16,6 @@ export default function roleForm() {
       label: '描述',
       placeholder: '请输入角色描述',
       allowClear: true,
-      // rules: [{ required: true, message: '角色描述不能为空' }]
     }
   ] as IFormItem[]
 }

@@ -24,7 +24,7 @@ export const formatRole = (role: number) => {
   }
 }
 
-export const mapRole = (roles?: IRole[], roleId?: string) => {
+export const mapRole = (roles?: IRole[], roleId?: number) => {
   const role = roles?.filter((item) => item.id === roleId)
   return role?.[0]?.name
 }

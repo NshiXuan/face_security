@@ -16,6 +16,7 @@ func InitRouter() *gin.Engine {
 	faceRouter.POST("/create", controller.CreateFace)
 	faceRouter.POST("", controller.FindFace)
 	faceRouter.GET("", controller.GetFaceList)
+	faceRouter.DELETE("", controller.RemoveFace)
 
 	r.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{

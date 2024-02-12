@@ -1,9 +1,9 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 
 import useTable from '@/hooks/useTable'
 import { IRole } from '@/type'
 import { DeleteOutlined, FormOutlined } from '@ant-design/icons'
-import { Button, Table, Tag } from 'antd'
+import { Button, Popconfirm, Table, Tag } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { TestRoleList } from '@/data/role-data'
 
@@ -26,7 +26,6 @@ const Role = function () {
     setIsOpen(false)
   }
 
-//?
   function handleOk() {
     form
       .validateFields()
@@ -36,6 +35,10 @@ const Role = function () {
       .catch((info) => {
         console.log('Validate Failed:', info)
       })
+  }
+
+  function handleConfirm(id: number) {
+
   }
 
   // 映射表表格的每一列
@@ -56,12 +59,10 @@ const Role = function () {
       render: (item: IRole) => {
         return (
           <div className="flex gap-3 ">
-            <Button type="primary" icon={<FormOutlined />}>
-              编辑
-            </Button>
-            <Button type="primary" icon={<DeleteOutlined />} danger>
-              删除
-            </Button>
+            <Button type="primary" icon={<FormOutlined />}>编辑</Button>
+            <Popconfirm title="确认删除吗？" cancelText="取消" okText="确认" onConfirm={() => handleConfirm(item.id)}>
+              <Button type="primary" icon={<DeleteOutlined />} danger>删除</Button>
+            </Popconfirm>
           </div>
         )
       }
@@ -71,7 +72,6 @@ const Role = function () {
   return (
     <div className="px-5">
       <Button type="primary" className="mb-2" onClick={handleOpen}>添加角色</Button>
-      {/* 表格 pagination 取消分页器 */}
       <Table
         rowKey={(record) => record.id}
         columns={columns}

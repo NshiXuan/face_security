@@ -1,7 +1,7 @@
 import { IFace, IResp } from '@/type'
 import request from './index'
 
-
+// TODO(nsx): 有 bug , headers 没传过去
 export const createFace = (params: FormData) => {
   return request.post({
     url: '/face/create',
@@ -25,5 +25,14 @@ export const findFace = (params: FormData) => {
 export const getFaceList = () => {
   return request.get<IResp<IFace[]>>({
     url: '/face',
+  })
+}
+
+export const deleteFace = (id: number) => {
+  return request.delete<IResp>({
+    url: '/face',
+    params: {
+      id
+    }
   })
 }

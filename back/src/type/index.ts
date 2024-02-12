@@ -5,13 +5,12 @@ export interface IResp<T = any> {
 }
 
 export interface IBase {
-  id: string | number
+  id: number
   ctime?: number
   mtime?: number
 }
 
 export interface IUser extends IBase {
-  id: string | number
   name: string
   password: string
   // email?: string
@@ -22,7 +21,6 @@ export interface IUser extends IBase {
 }
 
 export interface IRole extends IBase {
-  id: string | number
   name: string
   description: string
 }

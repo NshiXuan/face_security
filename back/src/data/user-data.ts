@@ -3,7 +3,7 @@ import { IUser } from '@/type'
 
 export const TestUserList: IUser[] = []
 
-for (let i = 1; i <= 30; i++) {
+for (let i = 1; i <= 20; i++) {
   TestUserList.push({
     id: i,
     name: Random.cname(),

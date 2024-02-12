@@ -32,9 +32,11 @@ type Face struct {
 	Names   []string
 }
 
-var FaceData = &Face{}
+var FaceData *Face
 
 func InitFaceSamples() error {
+	NewRecognise()
+
 	var faces []schemas.Face
 	if err := DB.Find(&faces).Error; err != nil {
 		return err
@@ -48,18 +50,22 @@ func InitFaceSamples() error {
 		if err != nil {
 			return fmt.Errorf("face recognize err: %w", err)
 		}
-		if sampleFace == nil {
-			// 没识别到人脸时跳过
+		if sampleFace == nil { // 没识别到人脸时跳过
 			continue
 		}
 		id := Rec.ClassifyThreshold(sampleFace.Descriptor, 0.3)
-		if id > 0 {
-			// sampleFace 数据已存在时跳过
+		if id > 0 { // sampleFace 数据已存在时跳过
 			continue
 		}
-		FaceData.Ids = append(FaceData.Ids, int32(face.ID))
-		FaceData.Samples = append(FaceData.Samples, sampleFace.Descriptor)
+		var faceData Face
+		faceData.Ids = append(faceData.Ids, int32(face.ID))
+		faceData.Samples = append(faceData.Samples, sampleFace.Descriptor)
+		FaceData = &faceData
 	}
-	Rec.SetSamples(FaceData.Samples, FaceData.Ids)
+	if FaceData != nil {
+		Rec.SetSamples(FaceData.Samples, FaceData.Ids)
+		return nil
+	}
+	FaceData = &Face{}
 	return nil
 }

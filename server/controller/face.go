@@ -47,13 +47,24 @@ func GetFaceList(ctx *gin.Context) {
 }
 
 func RemoveFace(ctx *gin.Context) {
-	id, err := strconv.Atoi(ctx.Query("id"))
+	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
 	if err := service.RemoveFace(int64(id)); err != nil {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
 	}
 	RespSuccess(ctx, nil)
+}
+
+func GetFaceByName(ctx *gin.Context) {
+	name := ctx.Query("name")
+	faces, err := service.GetFaceListByName(name)
+	if err != nil {
+		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
+	}
+	RespSuccess(ctx, faces)
 }

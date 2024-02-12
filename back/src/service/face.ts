@@ -24,15 +24,19 @@ export const findFace = (params: FormData) => {
 
 export const getFaceList = () => {
   return request.get<IResp<IFace[]>>({
+    url: '/faces',
+  })
+}
+
+export const getFaceListByName = (params: { name: string }) => {
+  return request.get<IResp<IFace[]>>({
     url: '/face',
+    params: params
   })
 }
 
 export const deleteFace = (id: number) => {
   return request.delete<IResp>({
-    url: '/face',
-    params: {
-      id
-    }
+    url: '/face/' + id,
   })
 }

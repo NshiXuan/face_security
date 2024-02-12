@@ -9,20 +9,20 @@ import (
 )
 
 func InitRouter() *gin.Engine {
-	r := gin.Default()
-	r.Use(middleware.Cors())
-	apiRouter := r.Group("api").Group("v1")
-	faceRouter := apiRouter.Group("face")
-	faceRouter.POST("/create", controller.CreateFace)
-	faceRouter.POST("", controller.FindFace)
-	faceRouter.GET("", controller.GetFaceList)
-	faceRouter.DELETE("", controller.RemoveFace)
+	router := gin.Default()
+	router.Use(middleware.Cors())
+	r := router.Group("api").Group("v1")
+	r.POST("/face/create", controller.CreateFace)
+	r.POST("/face", controller.FindFace)
+	r.GET("/faces", controller.GetFaceList)
+	r.GET("/face", controller.GetFaceByName)
+	r.DELETE("/face/:id", controller.RemoveFace)
 
-	r.NoRoute(func(c *gin.Context) {
+	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{
 			"code": http.StatusNotFound,
 			"msg":  "404 Not Found",
 		})
 	})
-	return r
+	return router
 }

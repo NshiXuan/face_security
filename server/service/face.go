@@ -109,3 +109,11 @@ func RemoveFace(id int64) error {
 	global.InitFaceSamples()
 	return nil
 }
+
+func GetFaceListByName(name string) ([]schemas.Face, error) {
+	var faces []schemas.Face
+	if err := global.DB.Where("name like ?", fmt.Sprintf("%s%%", name)).Find(&faces).Error; err != nil {
+		return nil, err
+	}
+	return faces, nil
+}

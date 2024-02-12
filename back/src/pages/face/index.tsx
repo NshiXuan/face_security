@@ -11,7 +11,7 @@ import { formatTimeV3 } from "@/utils"
 import BaseForm, { IFormItem } from "@/components/base-form"
 import useBaseForm from "@/hooks/useBaseForm"
 import BaseModal from "@/components/base-modal"
-import { createFace, deleteFace, findFace, getFaceList } from "@/service/face"
+import { createFace, deleteFace, findFace, getFaceList, getFaceListByName } from "@/service/face"
 import axios, { AxiosResponse } from "axios"
 import Search from "antd/es/input/Search"
 
@@ -30,10 +30,11 @@ const Face = function () {
 
   function handleGetFaceList() {
     getFaceList().then(res => {
-      setFaces([...TestFaces, ...res.data!])
+      if (res.data) {
+        setFaces([...TestFaces, ...res.data!])
+      }
     })
   }
-
 
   async function getCamera() {
     try {
@@ -177,6 +178,11 @@ const Face = function () {
     }
     const searchFaces = TestFaces.filter(item => item.name.includes(name))
     setFaces(searchFaces)
+    getFaceListByName({ name }).then(res => {
+      if (res.data) {
+        setFaces([...searchFaces, ...res.data])
+      }
+    })
   }
 
   function handleReset() {

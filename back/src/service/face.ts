@@ -24,7 +24,7 @@ export const findFace = (params: FormData) => {
 
 export const getFaceList = () => {
   return request.get<IResp<IFace[]>>({
-    url: '/faces',
+    url: '/face/list',
   })
 }
 

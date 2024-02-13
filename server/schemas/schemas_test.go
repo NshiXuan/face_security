@@ -10,7 +10,6 @@ import (
 
 func TestSchemas(t *testing.T) {
 	t.Run("init mysql table", func(t *testing.T) {
-		// 172.17.0.1
 		dsn := "root:@Codersx123@tcp(172.17.0.1:3306)/face_security?charset=utf8mb4&parseTime=True&loc=Local"
 		mysqlLog := logger.Default.LogMode(logger.Info)
 		db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
@@ -20,6 +19,6 @@ func TestSchemas(t *testing.T) {
 			panic(err)
 		}
 
-		db.AutoMigrate(&User{}, &Role{}, &UserRole{}, &Face{})
+		db.AutoMigrate(&User{}, &Role{}, &Face{})
 	})
 }

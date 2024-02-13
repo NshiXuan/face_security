@@ -10,7 +10,7 @@ import (
 )
 
 // TODO(nsx): 删除在创建会出现数据已存在
-func CreateFace(req *schemas.FaceCreateReq) (string, error) {
+func CreateFace(req *schemas.CreateFaceReq) (string, error) {
 	name := req.Name
 	file := req.File
 	rec := global.Rec
@@ -56,7 +56,7 @@ func CreateFace(req *schemas.FaceCreateReq) (string, error) {
 	return "录入成功", nil
 }
 
-func FindFace(req *schemas.FaceFindReq) (*schemas.FindFaceResp, error) {
+func FindFace(req *schemas.FindFaceReq) (*schemas.FindFaceResp, error) {
 	file := req.File
 	rec := global.Rec
 	f, err := file.Open()
@@ -110,7 +110,7 @@ func RemoveFace(id int64) error {
 	return nil
 }
 
-func GetFaceListByName(name string) ([]schemas.Face, error) {
+func GetFaceByName(name string) ([]schemas.Face, error) {
 	var faces []schemas.Face
 	if err := global.DB.Where("name like ?", fmt.Sprintf("%s%%", name)).Find(&faces).Error; err != nil {
 		return nil, err

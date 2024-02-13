@@ -2,12 +2,12 @@ package schemas
 
 import "mime/multipart"
 
-type FaceCreateReq struct {
+type CreateFaceReq struct {
 	Name string                `form:"name" binding:"required"`
 	File *multipart.FileHeader `form:"file" binding:"required"`
 }
 
-type FaceFindReq struct {
+type FindFaceReq struct {
 	File *multipart.FileHeader `form:"file" binding:"required"`
 }
 

@@ -70,7 +70,7 @@ const Face = function () {
         param.append("file", base64UrlToBlob(dataURL))
 
         // TODO(nsx): 使用封装的 axios 、回值类型、 message 类型
-        axios.post('http://localhost:8088/api/v1/face/create', param, {
+        axios.post('http://localhost:8088/api/v1/face', param, {
           headers: {
             "Content-Type": "multipart/form-data"
           }
@@ -95,7 +95,7 @@ const Face = function () {
     const dataURL = photoEl.toDataURL("image/jpeg");
     const param = new FormData()
     param.append("file", base64UrlToBlob(dataURL))
-    axios.post('http://localhost:8088/api/v1/face', param, {
+    axios.post('http://localhost:8088/api/v1/face/find', param, {
       headers: {
         "Content-Type": "multipart/form-data"
       }

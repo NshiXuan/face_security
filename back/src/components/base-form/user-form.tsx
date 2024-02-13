@@ -76,6 +76,25 @@ export default function userForm() {
       placeholder: '请输入居住地址',
       allowClear: true,
       rules: [{ required: true, message: '居住地址不能为空' }]
+    },
+    {
+      type: 'select',
+      name: 'role',
+      label: '角色',
+      placeholder: '请选择角色',
+      allowClear: true,
+      // TODO(nsx): 根据数据库获取
+      options: [
+        {
+          label: '管理员',
+          value: '1'
+        },
+        {
+          label: '业主',
+          value: '2'
+        }
+      ],
+      rules: [{ required: true, message: '请选择角色' }]
     }
   ] as IFormItem[]
 }

@@ -13,13 +13,16 @@ func InitRouter() *gin.Engine {
 	router.Use(middleware.Cors())
 	r := router.Group("api").Group("v1")
 	r.POST("/face", controller.CreateFace)
-	r.GET("/face", controller.GetFaceByName)
-	r.GET("/face/list", controller.GetFaceList)
 	r.POST("/face/find", controller.FindFace)
+	r.GET("/face", controller.GetFaceByName)
+	r.GET("/faces", controller.GetFaces)
 	r.PUT("/face/:id", controller.UpdateFace)
 	r.DELETE("/face/:id", controller.RemoveFace)
 
 	r.POST("/role", controller.CreateRole)
+	r.GET("/roles", controller.GetRoles)
+	r.PUT("/role/:id", controller.UpdateRole)
+	r.DELETE("/role/:id", controller.DeleteRole)
 
 	r.POST("/user", controller.CreateUser)
 	r.GET("/user", controller.GetUserByName)

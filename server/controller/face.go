@@ -42,8 +42,8 @@ func FindFace(ctx *gin.Context) {
 	RespSuccess(ctx, resp)
 }
 
-func GetFaceList(ctx *gin.Context) {
-	resp, err := service.GetFaceList()
+func GetFaces(ctx *gin.Context) {
+	resp, err := service.GetFaces()
 	if err != nil {
 		zap.S().Error(err)
 		RespError(ctx, CodeInternalServerError)

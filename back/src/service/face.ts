@@ -4,7 +4,7 @@ import request from './index'
 // TODO(nsx): 有 bug , headers 没传过去
 export const createFace = (params: FormData) => {
   return request.post({
-    url: '/face/create',
+    url: '/face',
     params: params,
     headers: {
       "Content-Type": "multipart/form-data"
@@ -14,7 +14,7 @@ export const createFace = (params: FormData) => {
 
 export const findFace = (params: FormData) => {
   return request.post({
-    url: '/face',
+    url: '/face/find',
     params: params,
     headers: {
       "Content-Type": "multipart/form-data"
@@ -24,7 +24,7 @@ export const findFace = (params: FormData) => {
 
 export const getFaceList = () => {
   return request.get<IResp<IFace[]>>({
-    url: '/face/list',
+    url: '/faces',
   })
 }
 

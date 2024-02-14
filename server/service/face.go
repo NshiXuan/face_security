@@ -90,7 +90,7 @@ func FindFace(req *schemas.FindFaceReq) (*schemas.FindFaceResp, error) {
 	}, nil
 }
 
-func GetFaceList() ([]schemas.Face, error) {
+func GetFaces() ([]schemas.Face, error) {
 	var faces []schemas.Face
 	if err := global.DB.Find(&faces).Error; err != nil {
 		return nil, err
@@ -98,7 +98,16 @@ func GetFaceList() ([]schemas.Face, error) {
 	return faces, nil
 }
 
+func GetFaceByName(name string) ([]schemas.Face, error) {
+	var faces []schemas.Face
+	if err := global.DB.Where("name like ?", fmt.Sprintf("%s%%", name)).Find(&faces).Error; err != nil {
+		return nil, err
+	}
+	return faces, nil
+}
+
 func RemoveFace(id int64) error {
+	// TODO(nsx): 判断 id 是否存在
 	var face schemas.Face
 	if err := global.DB.Delete(&face, id).Error; err != nil {
 		return err
@@ -108,12 +117,4 @@ func RemoveFace(id int64) error {
 	// 重新 init rec and sample
 	global.InitFaceSamples()
 	return nil
-}
-
-func GetFaceByName(name string) ([]schemas.Face, error) {
-	var faces []schemas.Face
-	if err := global.DB.Where("name like ?", fmt.Sprintf("%s%%", name)).Find(&faces).Error; err != nil {
-		return nil, err
-	}
-	return faces, nil
 }

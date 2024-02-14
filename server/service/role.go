@@ -9,6 +9,7 @@ import (
 func CreateRole(req *schemas.CreateRoleReq) (*schemas.Role, error) {
 	var role schemas.Role
 	role.Name = req.Name
+	// TODO(nsx): 验证是否 role 已经存在
 	if req.Desc != "" {
 		role.Desc = req.Desc
 	}

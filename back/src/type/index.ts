@@ -22,7 +22,7 @@ export interface IUser extends IBase {
 
 export interface IRole extends IBase {
   name: string
-  description: string
+  desc: string
 }
 
 export interface ILoginUser {

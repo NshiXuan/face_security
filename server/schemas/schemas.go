@@ -31,7 +31,7 @@ type User struct {
 	Password string `gorm:"type:varchar(200);not null" json:"password,omitempty"`
 	Name     string `gorm:"type:varchar(20);not null" json:"name,omitempty"`
 	// Gender   Gender `gorm:"type:enum(0,1);not null;comment:'0表示女 1表示男'"` 无效
-	Gender Gender `gorm:"type:int;not null;comment:'0表示女 1表示男'" json:"gender,omitempty"`
+	Gender Gender `gorm:"type:int;not null;comment:'1表示男 2表示女'" json:"gender,omitempty"`
 	Phone  string `gorm:"type:varchar(11);not null" json:"phone,omitempty"`
 	// Email   string `gorm:"type:varchar(20);not null" json:"email,omitempty"`
 	Address string `gorm:"type:varchar(50);not null" json:"address,omitempty"`
@@ -39,8 +39,8 @@ type User struct {
 	// TODO(nsx): 是否需要添加出生日期
 	// Birthday *time.Time `gorm:"type:datetime"`
 
-	RoleID int64
-	Role   Role
+	RoleID int64 `json:"role_id,omitempty"`
+	Role   *Role `json:"role,omitempty"`
 }
 
 // CREATE TABLE `roles` (`id` bigint unsigned AUTO_INCREMENT,`ctime` datetime(3) NULL,`mtime` datetime(3) NULL,`name` varchar(20) NOT NULL,`desc` varchar(200) NOT NULL DEFAULT ”,PRIMARY KEY (`id`))

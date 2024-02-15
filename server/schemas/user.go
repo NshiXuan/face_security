@@ -8,3 +8,5 @@ type CreateUserReq struct {
 	Address  string `json:"address,omitempty" binding:"required"`
 	RoleID   int64  `json:"role_id,omitempty" binding:"required"`
 }
+
+type UpdateUserReq = CreateUserReq

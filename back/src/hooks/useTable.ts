@@ -37,6 +37,7 @@ export default function useTable() {
     selectedRowKeys,
     rowSelection,
     pagination,
+    setPagination,
     loading,
     handlePageChange
   }

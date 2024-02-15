@@ -16,23 +16,23 @@ func CreateRole(ctx *gin.Context) {
 		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
 		return
 	}
-	resp, err := service.CreateRole(&req)
+	role, err := service.CreateRole(&req)
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
-	RespSuccess(ctx, resp)
+	RespSuccess(ctx, role)
 }
 
 func GetRoles(ctx *gin.Context) {
-	resp, err := service.GetRoles()
+	roles, err := service.GetRoles()
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
-	RespSuccess(ctx, resp)
+	RespSuccess(ctx, roles)
 }
 
 func UpdateRole(ctx *gin.Context) {
@@ -47,13 +47,13 @@ func UpdateRole(ctx *gin.Context) {
 		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
 		return
 	}
-	resp, err := service.UpdateRole(int64(id), &req)
+	role, err := service.UpdateRole(int64(id), &req)
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
-	RespSuccess(ctx, resp)
+	RespSuccess(ctx, role)
 }
 
 func DeleteRole(ctx *gin.Context) {
@@ -62,11 +62,11 @@ func DeleteRole(ctx *gin.Context) {
 		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
 		return
 	}
-	resp, err := service.DeleleRole(int64(id))
+	role, err := service.DeleleRole(int64(id))
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
-	RespSuccess(ctx, resp)
+	RespSuccess(ctx, role)
 }

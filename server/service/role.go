@@ -31,8 +31,8 @@ func GetRoles() ([]schemas.Role, error) {
 
 func UpdateRole(id int64, req *schemas.UpdateRoleReq) (*schemas.Role, error) {
 	var role schemas.Role
-	if err := global.DB.First(&role, id).Error; err != nil {
-		return nil, fmt.Errorf("db err: %w", err)
+	if res := global.DB.First(&role, id); res.RowsAffected == 0 {
+		return nil, fmt.Errorf("role not found")
 	}
 	if req.Name != "" {
 		role.Name = req.Name

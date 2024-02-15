@@ -5,7 +5,4 @@ type CreateRoleReq struct {
 	Desc string `json:"desc,omitempty"`
 }
 
-type UpdateRoleReq struct {
-	Name string `json:"name,omitempty" binding:"required"`
-	Desc string `json:"desc,omitempty"`
-}
+type UpdateRoleReq = CreateRoleReq

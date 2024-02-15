@@ -1,6 +1,6 @@
-import { IFormItem } from '../base-form'
+import { IFormItems, IOptions } from '../base-form'
 
-export default function userForm() {
+export default function userForm(roleOptions: IOptions) {
   return [
     {
       type: 'input',
@@ -10,10 +10,10 @@ export default function userForm() {
       allowClear: true,
       rules: [
         { required: true, message: '用户名不为空' },
-        {
-          pattern: /^[a-zA-Z0-9]{4,20}$/,
-          message: '用户名只能包含英文或数字，长度为4-20个字符'
-        }
+        // {
+        //   pattern: /^[a-zA-Z0-9]{1,20}$/,
+        //   message: '用户名只能包含英文或数字，长度为4-20个字符'
+        // }
       ]
     },
     {
@@ -23,7 +23,7 @@ export default function userForm() {
       placeholder: '请输入密码',
       allowClear: true,
       disabled: true,
-      defaultValue: 123456,
+      // defaultValue: 123456,
       rules: [
         { required: true, message: '密码不为空' },
         {
@@ -31,10 +31,10 @@ export default function userForm() {
           max: 20,
           message: '密码长度为6到20个字符'
         },
-        {
-          pattern: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
-          message: '密码必须包含数字、英文小写字母和英文大写字母'
-        }
+        // {
+        //   pattern: /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])/,
+        //   message: '密码必须包含数字、英文小写字母和英文大写字母'
+        // }
       ]
     },
     {
@@ -50,7 +50,7 @@ export default function userForm() {
         },
         {
           label: '女',
-          value: 0
+          value: 2
         }
       ],
       rules: [{ required: true, message: '请选择性别' }]
@@ -79,22 +79,12 @@ export default function userForm() {
     },
     {
       type: 'select',
-      name: 'role',
+      name: 'role_id',
       label: '角色',
       placeholder: '请选择角色',
       allowClear: true,
-      // TODO(nsx): 根据数据库获取
-      options: [
-        {
-          label: '管理员',
-          value: '1'
-        },
-        {
-          label: '业主',
-          value: '2'
-        }
-      ],
+      options: roleOptions,
       rules: [{ required: true, message: '请选择角色' }]
     }
-  ] as IFormItem[]
+  ] as IFormItems
 }

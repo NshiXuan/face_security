@@ -18,7 +18,7 @@ const Role = function () {
   const [isOpen, setIsOpen] = useState(false)
   const [roles, setRoles] = useState<IRole[]>()
   const [title, setTitle] = useState('添加角色')
-  const [initailValues, setInitailValues] = useState<IRole>()
+  const [initialValues, setInitialValues] = useState<IRole>()
 
   useEffect(() => {
     handleGetRoles()
@@ -35,7 +35,7 @@ const Role = function () {
   function handleOpen(model: 'add' | 'update', item?: IRole) {
     form.resetFields()
     setTitle(model === 'add' ? '新增角色' : '编辑角色')
-    setInitailValues(model === 'add' ? undefined : item)
+    setInitialValues(model === 'add' ? undefined : item)
     setIsOpen(true)
   }
 
@@ -122,7 +122,7 @@ const Role = function () {
       />
 
       <BaseModal open={isOpen} title={title} handleCancel={handleCancel} handleOk={handleOk}>
-        <BaseForm form={form} data={roleForm()} labelCol={4} initialValues={initailValues}></BaseForm>
+        <BaseForm form={form} data={roleForm()} labelCol={4} initialValues={initialValues}></BaseForm>
       </BaseModal>
     </div>
   )

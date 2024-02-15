@@ -15,9 +15,9 @@ export interface IUser extends IBase {
   password: string
   // email?: string
   gender: number
-  phone?: string
+  phone: string
   address: string
-  role: string | number
+  role_id: number
 }
 
 export interface IRole extends IBase {

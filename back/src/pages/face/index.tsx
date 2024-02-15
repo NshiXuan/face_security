@@ -16,7 +16,7 @@ import axios, { AxiosResponse } from "axios"
 import Search from "antd/es/input/Search"
 
 const Face = function () {
-  const { loading, rowSelection, pagination, handlePageChange } = useTable()
+  const { loading, rowSelection, pagination, setPagination, handlePageChange } = useTable()
   const { form, handleFinish } = useBaseForm()
   const [isOpen, setIsOpen] = useState(false)
   const [videoEl, setVideoEl] = useState<any>(null)
@@ -187,6 +187,10 @@ const Face = function () {
 
   function handleReset() {
     handleGetFaceList()
+    setPagination({
+      current: 1,
+      position: ['bottomCenter']
+    })
   }
 
   const columns: ColumnsType<IFace> = [

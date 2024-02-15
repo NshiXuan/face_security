@@ -10,9 +10,9 @@ for (let i = 1; i <= 20; i++) {
     password: '123456',
     // email: Random.email(),
     gender: Math.floor(Math.random() * 2 + 1),
-    phone: '12312312311',
+    phone: '13312312311',
     address: '01单元211',
-    role: Math.floor(Math.random() * 3 + 1),
+    role_id: Math.floor(Math.random() * 3 + 1),
     ctime: new Date().getTime(),
     mtime: new Date().getTime()
   })

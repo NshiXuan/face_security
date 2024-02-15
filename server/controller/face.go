@@ -43,13 +43,13 @@ func FindFace(ctx *gin.Context) {
 }
 
 func GetFaces(ctx *gin.Context) {
-	resp, err := service.GetFaces()
+	faces, err := service.GetFaces()
 	if err != nil {
 		zap.S().Error(err)
 		RespError(ctx, CodeInternalServerError)
 		return
 	}
-	RespSuccess(ctx, resp)
+	RespSuccess(ctx, faces)
 }
 
 func GetFaceByName(ctx *gin.Context) {
@@ -72,13 +72,14 @@ func RemoveFace(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
 		zap.S().Error(err)
-		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
 		return
 	}
-	if err := service.RemoveFace(int64(id)); err != nil {
+	face, err := service.RemoveFace(int64(id))
+	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
-	RespSuccess(ctx, nil)
+	RespSuccess(ctx, face)
 }

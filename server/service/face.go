@@ -106,15 +106,17 @@ func GetFaceByName(name string) ([]schemas.Face, error) {
 	return faces, nil
 }
 
-func RemoveFace(id int64) error {
-	// TODO(nsx): 判断 id 是否存在
+func RemoveFace(id int64) (*schemas.Face, error) {
 	var face schemas.Face
+	if res := global.DB.First(&face, id); res.RowsAffected == 0 {
+		return nil, fmt.Errorf("face not found")
+	}
 	if err := global.DB.Delete(&face, id).Error; err != nil {
-		return err
+		return nil, fmt.Errorf("db err: %w", err)
 	}
 	// TODO(nsx): 从 sample 中删除与删除对应的 images
 
 	// 重新 init rec and sample
 	global.InitFaceSamples()
-	return nil
+	return &face, nil
 }

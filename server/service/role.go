@@ -8,8 +8,10 @@ import (
 
 func CreateRole(req *schemas.CreateRoleReq) (*schemas.Role, error) {
 	var role schemas.Role
+	if res := global.DB.First(&role, "name = ?", req.Name); res.RowsAffected == 1 {
+		return nil, fmt.Errorf("role already exists")
+	}
 	role.Name = req.Name
-	// TODO(nsx): 验证是否 role 已经存在
 	if req.Desc != "" {
 		role.Desc = req.Desc
 	}

@@ -10,7 +10,7 @@ import BaseModal from '@/components/base-modal'
 import useBaseForm from '@/hooks/useBaseForm'
 import BaseForm from '@/components/base-form'
 import roleForm from '@/components/base-form/role-form'
-import { ICreateRoleReq, createRole, deleteRole, getRoleList, updateRole } from '@/service/role'
+import { createRole, deleteRole, getRoleList, updateRole } from '@/service/role'
 
 const Role = function () {
   const { rowSelection, loading } = useTable()
@@ -60,6 +60,7 @@ const Role = function () {
             handleGetRoles()
             return message.success("添加成功")
           }
+          return message.error(res.msg)
         })
       }
     }).catch((info) => {
@@ -73,6 +74,7 @@ const Role = function () {
         handleGetRoles()
         return message.success("删除成功")
       }
+      return message.error(res.msg)
     })
   }
 

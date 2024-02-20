@@ -38,7 +38,6 @@ const Face = function () {
 
   async function getCamera() {
     try {
-      // TODO(nsx): 将 videoEL 换成通过 Ref 获取
       const v = document.getElementById('video') as HTMLVideoElement
       setVideoEl(v)
       const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true })

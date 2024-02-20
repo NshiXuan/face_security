@@ -26,7 +26,7 @@ export interface IRole extends IBase {
 }
 
 export interface ILoginUser {
-  username: string
+  phone: string
   password: string
 }
 

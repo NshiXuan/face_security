@@ -1,5 +1,5 @@
-import { Spin } from 'antd'
 import React from 'react'
+import { Spin } from 'antd'
 
 // loading需要父组件使用定位才居中显示
 const Loading = function () {

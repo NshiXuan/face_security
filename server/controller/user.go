@@ -9,6 +9,7 @@ import (
 	"go.uber.org/zap"
 )
 
+// TODO(nsx): 密码加密
 func CreateUser(ctx *gin.Context) {
 	var req schemas.CreateUserReq
 	if err := ctx.ShouldBind(&req); err != nil {

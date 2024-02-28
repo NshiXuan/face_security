@@ -3,14 +3,15 @@ package router
 import (
 	"net/http"
 	"server/controller"
-	"server/middleware"
+	"server/middlewares"
 
 	"github.com/gin-gonic/gin"
 )
 
 func InitRouter() *gin.Engine {
 	router := gin.Default()
-	router.Use(middleware.Cors())
+	router.Use(middlewares.Cors())
+
 	r := router.Group("api").Group("v1")
 	r.POST("/face", controller.CreateFace)
 	r.POST("/face/find", controller.FindFace)

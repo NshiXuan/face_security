@@ -3,18 +3,15 @@
 pnpm i
 ```
 
-## 安装 tracking 依赖
-```
-pnpm add tracking
-pnpm add @types/tracking
-```
-
 ## 运行
 ```
 pnpm start
 ```
 
 ## 使用手册
+- 后台管理系统管理员密码
+
+## 开发手册
 - 菜单：根据 `data` 目录的 `menu-data.tsx` 配置菜单项，然后创建对应的 `router` 与 `page` 即可创建出对应的菜单
 
 - 表格：
@@ -42,4 +39,3 @@ pnpm start
 - axios config invalid
 - web proxy cors
 - face form note
-- face rec message category

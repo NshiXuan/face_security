@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
 
 import BaseForm from '@/components/base-form'
 import { loginForm } from '@/components/base-form/login-form'
@@ -6,17 +6,16 @@ import { Button, message } from 'antd'
 
 import loginImg from '@/assets/img/bg.png'
 import useBaseForm from '@/hooks/useBaseForm'
-import { useSyncLocalStorage } from '@/hooks/useSyncLocalStorage'
 import { ILoginUser } from '@/type'
-import { BACK_USER } from '@/enums'
 import { useNavigate } from 'react-router-dom'
+import { login } from '@/service/auth'
+import { useSyncLocalStorage } from '@/hooks/useSyncLocalStorage'
 
 const Login = function () {
   const { form } = useBaseForm()
   const [title, setTitle] = useState<'face' | 'phone'>('phone')
+  const [token, setToken] = useSyncLocalStorage("token")
   const [videoEl, setVideoEl] = useState<any>()
-
-  const [user, setUser] = useSyncLocalStorage<ILoginUser>(BACK_USER)
   const nav = useNavigate()
 
   function handleChange() {
@@ -55,12 +54,14 @@ const Login = function () {
         if (values.phone.trim() == '' || values.password.trim() == '') {
           return message.error('手机号或密码不能为空')
         }
-        // TODO(nsx): 根据数据库校验
-        if (values.phone == '18888888888' && values.password == '123456') {
-          setUser(values)
-          return nav('/home')
-        }
-        return message.error('用户名或密码错误')
+        login({ phone: values.phone, password: values.password }).then(res => {
+          if (res.code == 200) {
+            console.log("🚀 ~ login ~ res.data!.token:", res.data!.token)
+            setToken(res.data!.token)
+            return nav('/home')
+          }
+          message.error(res.msg)
+        })
       }).catch((info) => {
         console.log('Validate Failed:', info)
       })
@@ -70,8 +71,8 @@ const Login = function () {
   }
 
   return (
-    <div className="bg-slate-500 h-[100vh] flex items-center justify-center ">
-      <div className="bg-white  w-[900px] rounded-lg overflow-hidden flex justify-between  shadow-sm">
+    <div className="h-[100vh] flex items-center justify-center ">
+      <div className="w-[900px] rounded-lg overflow-hidden flex justify-between">
         <div className="p-5  flex-1 flex flex-col justify-between ">
           <h2>{title == 'face' ? '人脸识别登录' : '手机号登录'}</h2>
           {title == 'phone' &&
@@ -86,8 +87,9 @@ const Login = function () {
           <div className='mx-auto '>
             <Button type='primary' onClick={handleLogin} >登录</Button>
           </div>
-          <div className='text-blue-500'>
-            <a onClick={handleChange} className="text-xs mr-2 cursor-pointer hover:text-blue-500">{title == 'face' ? '手机号登录' : '人脸识别登录'}</a>
+          <div>
+            <a onClick={handleChange} className="text-xs cursor-pointer hover:text-blue-500">{title == 'face' ? '手机号登录' : '人脸识别登录'}</a>
+            <span className='mx-2 text-slate-500'>|</span>
             <a className="text-xs cursor-pointer hover:text-blue-500">找回密码</a>
           </div>
         </div>

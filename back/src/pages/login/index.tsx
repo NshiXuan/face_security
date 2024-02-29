@@ -6,10 +6,11 @@ import { Button, message } from 'antd'
 
 import loginImg from '@/assets/img/bg.png'
 import useBaseForm from '@/hooks/useBaseForm'
-import { ILoginUser } from '@/type'
+import { ILoginUser, IResp } from '@/type'
 import { useNavigate } from 'react-router-dom'
-import { login } from '@/service/auth'
+import { ILoginResp, login } from '@/service/auth'
 import { useSyncLocalStorage } from '@/hooks/useSyncLocalStorage'
+import axios, { AxiosResponse } from 'axios'
 
 const Login = function () {
   const { form } = useBaseForm()
@@ -56,7 +57,6 @@ const Login = function () {
         }
         login({ phone: values.phone, password: values.password }).then(res => {
           if (res.code == 200) {
-            console.log("🚀 ~ login ~ res.data!.token:", res.data!.token)
             setToken(res.data!.token)
             return nav('/home')
           }
@@ -66,8 +66,42 @@ const Login = function () {
         console.log('Validate Failed:', info)
       })
     } else {
-      console.log("🚀 ~ handleLogin ~ title:", title)
+      handleRecognition()
     }
+  }
+
+  function handleRecognition() {
+    const photoEl = document.getElementById("photo") as HTMLCanvasElement
+    const ctx = photoEl.getContext('2d')
+    ctx?.drawImage(videoEl, 0, 0, 240, 180)
+    const dataURL = photoEl.toDataURL("image/jpeg");
+    const param = new FormData()
+    param.append("file", base64UrlToBlob(dataURL))
+    axios.post('http://localhost:8088/api/v1/auth/face', param, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    }).then((res: AxiosResponse<IResp<ILoginResp>>) => {
+      if (res.data.code == 200) {
+        setToken(res.data!.data?.token)
+        closeCamera()
+        return nav('/home')
+      }
+      message.open({
+        type: "error",
+        content: res.data.msg
+      })
+    })
+  }
+
+  function base64UrlToBlob(url: string) {
+    const bytes = window.atob(url.split(',')[1]);
+    const ab = new ArrayBuffer(bytes.length);
+    const ia = new Uint8Array(ab);
+    for (let i = 0; i < bytes.length; i++) {
+      ia[i] = bytes.charCodeAt(i);
+    }
+    return new Blob([ab], { type: 'image/jpg' });
   }
 
   return (
@@ -83,7 +117,10 @@ const Login = function () {
               childLayout="center"
             />
           }
-          <video id="video" loop autoPlay muted className={title == 'phone' ? 'hidden' : 'rounded-md my-3'}></video>
+          <div className='flex justify-center  rounded-xl overflow-hidden'>
+            <video id="video" loop autoPlay muted className={title == 'phone' ? 'hidden' : 'rounded-xl my-3'}></video>
+          </div>
+          <canvas id="photo" width={240} height={180} className="hidden"></canvas>
           <div className='mx-auto '>
             <Button type='primary' onClick={handleLogin} >登录</Button>
           </div>

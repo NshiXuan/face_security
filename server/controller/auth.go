@@ -52,5 +52,18 @@ func FaceLogin(ctx *gin.Context) {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 		return
 	}
-	RespSuccess(ctx, resp)
+	j := middlewares.NewJWT()
+	token, err := j.CreateToken(middlewares.CustomClaims{
+		ID:       uint(resp.ID),
+		UserName: resp.Name,
+		StandardClaims: jwt.StandardClaims{
+			NotBefore: time.Now().Unix(),               // 签名失效时间
+			ExpiresAt: time.Now().Unix() + 60*60*24*30, // 30天过期
+			Issuer:    "codersx",                       // 签发机构
+		},
+	})
+	if err != nil {
+		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+	}
+	RespSuccess(ctx, map[string]string{"token": token})
 }

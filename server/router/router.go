@@ -32,6 +32,7 @@ func InitRouter() *gin.Engine {
 	r.DELETE("/user/:id", controller.DeleteUser)
 
 	r.POST("/auth/login", controller.Login)
+	r.POST("/auth/face", controller.FaceLogin)
 
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{

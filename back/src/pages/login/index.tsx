@@ -74,7 +74,7 @@ const Login = function () {
     <div className="h-[100vh] flex items-center justify-center ">
       <div className="w-[900px] rounded-lg overflow-hidden flex justify-between">
         <div className="p-5  flex-1 flex flex-col justify-between ">
-          <h2>{title == 'face' ? '人脸识别登录' : '手机号登录'}</h2>
+          <h1 className='font-bold'>{title == 'face' ? '人脸识别登录' : '手机号登录'}</h1>
           {title == 'phone' &&
             <BaseForm
               data={loginForm}

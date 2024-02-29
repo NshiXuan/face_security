@@ -39,3 +39,5 @@ pnpm start
 - axios config invalid
 - web proxy cors
 - face form note
+- import echarts
+  - echarts width height is vw vh

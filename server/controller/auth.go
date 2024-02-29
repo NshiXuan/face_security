@@ -38,3 +38,19 @@ func Login(ctx *gin.Context) {
 	}
 	RespSuccess(ctx, map[string]string{"token": token})
 }
+
+func FaceLogin(ctx *gin.Context) {
+	var req schemas.FindFaceReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		zap.S().Error(err)
+		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
+		return
+	}
+	resp, err := service.FindFace(&req)
+	if err != nil {
+		zap.S().Error(err)
+		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
+	}
+	RespSuccess(ctx, resp)
+}

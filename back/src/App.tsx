@@ -21,7 +21,7 @@ function App() {
         <div className="flex-1 relative overflow-y-auto ">
           {isLogin && <BreadCrumb />}
           <Suspense fallback={<Loading />}>
-            <div >{useRoutes(routes)}</div>
+            <div>{useRoutes(routes)}</div>
           </Suspense>
         </div>
       </div>

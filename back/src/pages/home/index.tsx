@@ -43,7 +43,7 @@ const Home = function () {
 
   const option2: EChartsOption = {
     title: {
-      text: '小区人数与陌生人数',
+      text: '小区人数与陌生人人数',
       left: 'center'
     },
     tooltip: {
@@ -60,7 +60,7 @@ const Home = function () {
         radius: '50%',
         data: [
           { value: 1048, name: '小区人数' },
-          { value: 100, name: '陌生人' },
+          { value: 100, name: '陌生人人数' },
         ],
         emphasis: {
           itemStyle: {
@@ -101,7 +101,7 @@ const Home = function () {
   }, []);
 
   return (
-    <div className='flex gap-5'>
+    <div className='flex gap-5 mt-2'>
       <div id="echart1" ref={cDom1} style={{ width: '40vw', height: '80vh' }} />
       <div id="echart2" ref={cDom2} style={{ width: '40vw', height: '80vh' }} />
     </div>

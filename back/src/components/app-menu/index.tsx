@@ -68,7 +68,6 @@ const AppMenu = function () {
         style={{ height: '100%' }}
         inlineCollapsed={collapse}
       >
-        <div className='bg-red-500'>hello</div>
       </Menu>
     </div>
   )

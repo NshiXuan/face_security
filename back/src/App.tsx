@@ -10,16 +10,16 @@ import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { BACK_COLLAPSE } from './enums'
 
 function App() {
-  const { isLogin } = useAuth()
+  const { isLogin, pathname } = useAuth()
   const [collapse, setCollapse] = useLocalStorage(BACK_COLLAPSE)
 
   return (
     <CollapseContext.Provider value={{ collapse, setCollapse }}>
       <div className={`flex h-[100vh] overflow-hidden `}>
-        {isLogin && <AppMenu />}
+        {(isLogin && !pathname.includes('/client')) && <AppMenu />}
 
         <div className="flex-1 relative overflow-y-auto ">
-          {isLogin && <BreadCrumb />}
+          {(isLogin && !pathname.includes('/client')) && <BreadCrumb />}
           <Suspense fallback={<Loading />}>
             <div>{useRoutes(routes)}</div>
           </Suspense>

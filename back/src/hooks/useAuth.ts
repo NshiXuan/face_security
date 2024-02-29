@@ -9,18 +9,17 @@ export default function useAuth() {
   const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
-    // TODO(nsx): 使用 session 验证
-    // if (!user || (user.phone != '18888888888' && user.password != '123456')) {
-    //   setIsLogin(false)
-    //   return nav('/login')
-    // }
     if (token == undefined || token.trim() == "") {
       setIsLogin(false)
       return nav('/login')
     }
 
-    pathname == '/login' || pathname == '/register' ? nav('/home') : setIsLogin(true)
+    if (pathname == '/login' || pathname == '/register') {
+      nav('/home')
+    } else {
+      setIsLogin(true)
+    }
   }, [pathname])
 
-  return { isLogin }
+  return { isLogin, pathname }
 }

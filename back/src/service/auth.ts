@@ -7,6 +7,7 @@ export type ILoginReq = {
 }
 
 export type ILoginResp = {
+  user_id: number
   token: string
 }
 

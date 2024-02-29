@@ -18,6 +18,7 @@ export interface IUser extends IBase {
   phone: string
   address: string
   role_id: number
+  role?: IRole
 }
 
 export interface IRole extends IBase {

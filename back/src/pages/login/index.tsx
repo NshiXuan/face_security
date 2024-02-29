@@ -58,7 +58,7 @@ const Login = function () {
         login({ phone: values.phone, password: values.password }).then(res => {
           if (res.code == 200) {
             setToken(res.data!.token)
-            return nav('/home')
+            return nav('/client/' + res.data?.user_id)
           }
           message.error(res.msg)
         })
@@ -85,7 +85,7 @@ const Login = function () {
       if (res.data.code == 200) {
         setToken(res.data!.data?.token)
         closeCamera()
-        return nav('/home')
+        return nav('/client/' + res.data.data?.user_id)
       }
       message.open({
         type: "error",
@@ -127,7 +127,10 @@ const Login = function () {
           <div>
             <a onClick={handleChange} className="text-xs cursor-pointer hover:text-blue-500">{title == 'face' ? '手机号登录' : '人脸识别登录'}</a>
             <span className='mx-2 text-slate-500'>|</span>
-            <a className="text-xs cursor-pointer hover:text-blue-500">找回密码</a>
+            <a className="text-xs cursor-pointer hover:text-blue-500">人脸识别离开</a>
+            <div>
+              <a className="text-xs cursor-pointer hover:text-blue-500">找回密码</a>
+            </div>
           </div>
         </div>
         {title == 'phone' && <img className="w-[500px] object-cover" src={loginImg} alt="bg" />}

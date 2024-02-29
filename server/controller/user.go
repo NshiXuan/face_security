@@ -47,6 +47,22 @@ func GetUserByName(ctx *gin.Context) {
 	RespSuccess(ctx, users)
 }
 
+func GetUserById(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		zap.S().Error(err)
+		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
+		return
+	}
+	user, err := service.GetUserById(int64(id))
+	if err != nil {
+		zap.S().Error(err)
+		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
+	}
+	RespSuccess(ctx, user)
+}
+
 func UpdateUser(ctx *gin.Context) {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {

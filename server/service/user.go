@@ -41,6 +41,14 @@ func GetUserByName(name string) ([]schemas.User, error) {
 	return users, nil
 }
 
+func GetUserById(id int64) (*schemas.User, error) {
+	var user schemas.User
+	if err := global.DB.Preload("Role").Find(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
 func UpdateUser(id int64, req *schemas.CreateUserReq) (*schemas.User, error) {
 	var user schemas.User
 	if res := global.DB.First(&user, id); res.RowsAffected == 0 {

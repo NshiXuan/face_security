@@ -34,6 +34,12 @@ export const getUserByName = (params: { name: string }) => {
   })
 }
 
+export const getUserById = (id: string) => {
+  return request.get<IResp<IUser>>({
+    url: '/user/' + id
+  })
+}
+
 export const updateUser = (params: IUpdateUserReq) => {
   return request.put<IResp<IUser>>({
     url: '/user/' + params.id,

@@ -6,6 +6,7 @@ const User = lazy(() => import('@/pages/user'))
 const Home = lazy(() => import('@/pages/home'))
 const Role = lazy(() => import('@/pages/role'))
 const Face = lazy(() => import('@/pages/face'))
+const Client = lazy(() => import('@/pages/client'))
 const NoFound = lazy(() => import('@/pages/no-found'))
 
 const routes: RouteObject[] = [
@@ -33,6 +34,10 @@ const routes: RouteObject[] = [
   {
     path: '/face',
     element: <Face />
+  },
+  {
+    path: '/client/:id',
+    element: <Client />
   },
   {
     path: '/*',

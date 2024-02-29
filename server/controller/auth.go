@@ -36,7 +36,10 @@ func Login(ctx *gin.Context) {
 	if err != nil {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 	}
-	RespSuccess(ctx, map[string]string{"token": token})
+	RespSuccess(ctx, schemas.LoginResp{
+		UserId: user.ID,
+		Token:  token,
+	})
 }
 
 func FaceLogin(ctx *gin.Context) {
@@ -46,7 +49,7 @@ func FaceLogin(ctx *gin.Context) {
 		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
 		return
 	}
-	resp, err := service.FindFace(&req)
+	user, err := service.FindFace(&req)
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
@@ -54,8 +57,8 @@ func FaceLogin(ctx *gin.Context) {
 	}
 	j := middlewares.NewJWT()
 	token, err := j.CreateToken(middlewares.CustomClaims{
-		ID:       uint(resp.ID),
-		UserName: resp.Name,
+		ID:       uint(user.ID),
+		UserName: user.Name,
 		StandardClaims: jwt.StandardClaims{
 			NotBefore: time.Now().Unix(),               // 签名失效时间
 			ExpiresAt: time.Now().Unix() + 60*60*24*30, // 30天过期
@@ -65,5 +68,8 @@ func FaceLogin(ctx *gin.Context) {
 	if err != nil {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 	}
-	RespSuccess(ctx, map[string]string{"token": token})
+	RespSuccess(ctx, schemas.LoginResp{
+		UserId: user.ID,
+		Token:  token,
+	})
 }

@@ -19,6 +19,6 @@ func TestSchemas(t *testing.T) {
 			panic(err)
 		}
 
-		db.AutoMigrate(&User{}, &Role{}, &Face{})
+		db.AutoMigrate(&User{}, &Role{}, &Face{}, &Notice{})
 	})
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import BaseForm from '@/components/base-form'
 import { loginForm } from '@/components/base-form/login-form'
@@ -11,12 +11,14 @@ import { useNavigate } from 'react-router-dom'
 import { ILoginResp, login } from '@/service/auth'
 import { useSyncLocalStorage } from '@/hooks/useSyncLocalStorage'
 import axios, { AxiosResponse } from 'axios'
+import useWebsocket from '@/hooks/useWebsocket'
 
 const Login = function () {
   const { form } = useBaseForm()
   const [title, setTitle] = useState<'face' | 'phone'>('phone')
   const [token, setToken] = useSyncLocalStorage("token")
   const [videoEl, setVideoEl] = useState<any>()
+  const { ws } = useWebsocket()
   const nav = useNavigate()
 
   function handleChange() {
@@ -58,6 +60,9 @@ const Login = function () {
         login({ phone: values.phone, password: values.password }).then(res => {
           if (res.code == 200) {
             setToken(res.data!.token)
+            if (res.data?.role_id == 1) {
+              return nav('/home')
+            }
             return nav('/client/' + res.data?.user_id)
           }
           message.error(res.msg)
@@ -85,7 +90,13 @@ const Login = function () {
       if (res.data.code == 200) {
         setToken(res.data!.data?.token)
         closeCamera()
+        if (res.data?.data?.role_id == 1) {
+          return nav('/home')
+        }
         return nav('/client/' + res.data.data?.user_id)
+      }
+      if (res.data.msg == '人脸数据不存在') {
+        ws.send("有陌生人靠近")
       }
       message.open({
         type: "error",

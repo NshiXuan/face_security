@@ -75,7 +75,6 @@ func FindFace(req *schemas.FindFaceReq) (*schemas.FindFaceResp, error) {
 		return nil, fmt.Errorf("未检出到人脸数据")
 	}
 	id := rec.ClassifyThreshold(sampleFace.Descriptor, 0.3)
-	fmt.Printf("find id: %v\n", id)
 	if id < 0 {
 		return nil, fmt.Errorf("人脸数据不存在")
 	}

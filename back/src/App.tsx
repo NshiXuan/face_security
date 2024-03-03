@@ -8,13 +8,15 @@ import Loading from './components/loading'
 import BreadCrumb, { CollapseContext } from './components/bread-crumb'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
 import { BACK_COLLAPSE } from './enums'
+import useWebsocket from './hooks/useWebsocket'
 
+const { ws } = useWebsocket()
 function App() {
   const { isLogin, pathname } = useAuth()
   const [collapse, setCollapse] = useLocalStorage(BACK_COLLAPSE)
 
   return (
-    <CollapseContext.Provider value={{ collapse, setCollapse }}>
+    <CollapseContext.Provider value={{ ws, collapse, setCollapse }}>
       <div className={`flex h-[100vh] overflow-hidden `}>
         {(isLogin && !pathname.includes('/client')) && <AppMenu />}
 

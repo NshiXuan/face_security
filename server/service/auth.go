@@ -14,5 +14,6 @@ func Login(req *schemas.LoginReq) (*schemas.User, error) {
 	if req.Password != user.Password {
 		return nil, fmt.Errorf("wrong password")
 	}
+	user.IsLogin = 2
 	return &user, nil
 }

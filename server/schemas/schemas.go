@@ -23,8 +23,6 @@ const (
 )
 
 // TODO(nsx): 有问题 id 与 gender 都为了 bigint
-// CREATE TABLE `users` (`id` bigint unsigned AUTO_INCREMENT,`ctime` datetime(3) NULL,`mtime` datetime(3) NULL,`password` varchar(200) NOT NULL,`name` varchar(20) NOT NULL,`gender` bigint,`phone` varchar(11) NOT NULL,`address` varchar(50) NOT NULL,PRIMARY KEY (`id`))
-
 // CREATE TABLE `users` (`id` bigint unsigned AUTO_INCREMENT,`ctime` datetime(3) NULL,`mtime` datetime(3) NULL,`password` varchar(200) NOT NULL,`name` varchar(20) NOT NULL,`gender` bigint NOT NULL COMMENT ”'0表示女 1表示男”',`phone` varchar(11) NOT NULL,`address` varchar(50) NOT NULL,PRIMARY KEY (`id`))
 type User struct {
 	Base
@@ -35,6 +33,7 @@ type User struct {
 	Phone  string `gorm:"type:varchar(11);not null" json:"phone,omitempty"`
 	// Email   string `gorm:"type:varchar(20);not null" json:"email,omitempty"`
 	Address string `gorm:"type:varchar(50);not null" json:"address,omitempty"`
+	IsLogin int    `gorm:"type:int;default:1;not null;comment:'1表示未登录，2表示登录'" json:"is_login,omitempty"`
 
 	// TODO(nsx): 是否需要添加出生日期
 	// Birthday *time.Time `gorm:"type:datetime"`
@@ -63,4 +62,9 @@ type Face struct {
 	Name     string `gorm:"type:varchar(20);not null" json:"name,omitempty"`
 	ImageUrl string `gorm:"type:varchar(200);default:'';not null" json:"image_url,omitempty"`
 	Remark   string `gorm:"type:varchar(200);default:'';not null" json:"remark,omitempty"`
+}
+
+type Notice struct {
+	Base
+	Message string `gorm:"type:varchar(200);default:'';not null" json:"message,omitempty"`
 }

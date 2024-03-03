@@ -36,3 +36,7 @@ export interface IFace extends IBase {
   image_url: string
   remake?: string
 }
+
+export interface INotice extends IBase {
+  message: string
+}

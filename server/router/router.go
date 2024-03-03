@@ -34,6 +34,15 @@ func InitRouter() *gin.Engine {
 
 	r.POST("/auth/login", controller.Login)
 	r.POST("/auth/face", controller.FaceLogin)
+	// r.POST("/auth/check", controller.CheckRole)
+
+	r.POST("/notice", controller.CreateNotice)
+	r.GET("/notices", controller.GetNotices)
+	r.GET("/notice", controller.GetNoticesByTime)
+	r.DELETE("/notice/:id", controller.DeleteNotice)
+
+	r.GET("/ws", controller.HandleWebSocket)
+	go controller.HandleMessages()
 
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{

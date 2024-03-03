@@ -6,6 +6,7 @@ const User = lazy(() => import('@/pages/user'))
 const Home = lazy(() => import('@/pages/home'))
 const Role = lazy(() => import('@/pages/role'))
 const Face = lazy(() => import('@/pages/face'))
+const Notice = lazy(() => import('@/pages/notice'))
 const Client = lazy(() => import('@/pages/client'))
 const NoFound = lazy(() => import('@/pages/no-found'))
 
@@ -34,6 +35,10 @@ const routes: RouteObject[] = [
   {
     path: '/face',
     element: <Face />
+  },
+  {
+    path: '/notice',
+    element: <Notice />
   },
   {
     path: '/client/:id',

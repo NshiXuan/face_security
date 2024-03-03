@@ -8,11 +8,13 @@ import avatar from '@/assets/img/bg.png'
 import { useNavigate } from 'react-router-dom'
 
 interface ICollapseContext {
+  ws: any
   collapse: boolean
   setCollapse: any
 }
 
 export const CollapseContext = createContext<ICollapseContext>({
+  ws: undefined,
   collapse: false,
   setCollapse: undefined
 })

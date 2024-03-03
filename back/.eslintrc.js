@@ -26,6 +26,7 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': 'off', // 定义了却们没有使用的检查
     'react/prop-types': 'off', // 关闭 react 的 porpType 检查
     '@typescript-eslint/no-empty-interface': 'off', // 关闭 interface 不为空对象
-    '@typescript-eslint/no-empty-function': 'off' // 关闭空函数
+    '@typescript-eslint/no-empty-function': 'off', // 关闭空函数
+    '@typescript-eslint/no-non-null-assertion': 'off'
   }
 }

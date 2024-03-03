@@ -3,7 +3,8 @@ import {
   FormOutlined,
   ReadOutlined,
   UserOutlined,
-  SmileOutlined
+  SmileOutlined,
+  MessageOutlined
 } from '@ant-design/icons'
 import React from 'react'
 
@@ -40,5 +41,11 @@ export const menuData: MenuDataItem[] = [
     key: '/face',
     link: '/face',
     icon: <SmileOutlined />
+  },
+  {
+    label: '通知管理',
+    key: '/notice',
+    link: '/notice',
+    icon: <MessageOutlined />
   }
 ]

@@ -7,15 +7,16 @@ sudo apt-get install libdlib-dev libblas-dev liblapack-dev libjpeg-turbo8-dev
 ```
 sudo apt-get install libdlib-dev libblas-dev libatlas-base-dev liblapack-dev libjpeg-turbo8-dev
 ```
-
 - 详情请看
-https://uxtynntzvhi.feishu.cn/docx/OdkSd3dOvosM50xKcisctBiEndg
+https://github.com/Kagami/go-face
 
 # TODO
 - preload 可以与 create 一起使用吗？
 - 获取用户的时候不要返回密码信息
 - 密码加密
 - 添加分页查询
+- 添加批量删除
+- 添加人脸识别离开接口
 - 目前 log 直接使用 zap.S()，但是不去作用
 - faces 的名称是否可以相同？且 faces 对应的 userid 无法联系
   - 如果相同在 checkRole 中会返回多个 user，如果 faces 可以与 userid 对应就没有问题

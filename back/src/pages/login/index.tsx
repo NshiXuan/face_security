@@ -12,6 +12,8 @@ import { ILoginResp, login } from '@/service/auth'
 import { useSyncLocalStorage } from '@/hooks/useSyncLocalStorage'
 import axios, { AxiosResponse } from 'axios'
 import useWebsocket from '@/hooks/useWebsocket'
+import { createNotice } from '@/service/notice'
+import { formatTimeV2 } from '@/utils'
 
 const Login = function () {
   const { form } = useBaseForm()
@@ -96,7 +98,13 @@ const Login = function () {
         return nav('/client/' + res.data.data?.user_id)
       }
       if (res.data.msg == '人脸数据不存在') {
-        ws.send("有陌生人靠近")
+        const message = "有陌生人靠近"
+        ws.send(formatTimeV2(new Date().getTime()) + " : " + message)
+        createNotice({ message }).then(res => {
+          console.log("🚀 ~ createNotice ~ res:", res)
+        }).catch(err => {
+          console.log("🚀 ~ createNotice ~ err:", err)
+        })
       }
       message.open({
         type: "error",

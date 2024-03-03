@@ -7,10 +7,12 @@ import { getUserById } from "@/service/user"
 import { IUser } from "@/type"
 import { useNavigate, useParams } from "react-router-dom"
 import useWebsocket from "@/hooks/useWebsocket"
+import { getNoticeList } from "@/service/notice"
+import { formatTimeV2 } from "@/utils"
 
 const Client = function () {
   const [user, setUser] = useState<IUser>()
-  const [messages, setMessages] = useState<string[]>([])
+  const [notices, setNotices] = useState<string[]>([])
   const { ws } = useWebsocket()
   const nav = useNavigate()
   const params = useParams()
@@ -18,13 +20,24 @@ const Client = function () {
   useEffect(() => {
     handleGetUser()
     ws.onmessage = function (event: any) {
-      setMessages((messages) => [...messages, event.data])
+      setNotices((notices) => [...notices, event.data])
     }
 
+    handleGetNotices()
     //   return () => {
     //     ws.close();
     //   }
   }, [])
+
+  function handleGetNotices() {
+    getNoticeList().then(res => {
+      if (res.code == 200) {
+        setNotices(res.data!.map(item => {
+          return formatTimeV2(item.ctime!) + " : " + item.message
+        }))
+      }
+    })
+  }
 
   function handleGetUser() {
     const id = params.id
@@ -67,12 +80,12 @@ const Client = function () {
         </div>
       </div>
       <div className="flex-1 h-screen px-4 py-2 overflow-y-auto bg-slate-50 relative">
-        {messages.length > 0 ? <div className="flex flex-col gap-3">
-          {messages.map((msg, index) =>
+        {notices.length > 0 ? <div className="flex flex-col gap-3">
+          {notices.map((notice, index) =>
             <div key={index}>
               <Alert
                 message="警告"
-                description={msg}
+                description={notice}
                 type="warning"
                 showIcon
               />

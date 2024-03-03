@@ -18,6 +18,13 @@ export const getNoticesByTime = (params: IGetNoticesReq) => {
   })
 }
 
+export const createNotice = (params: { message: string }) => {
+  return request.post<IResp<INotice>>({
+    url: '/notice',
+    data: params
+  })
+}
+
 export const deleteNotice = (id: number) => {
   return request.delete<IResp<INotice>>({
     url: '/notice/' + id

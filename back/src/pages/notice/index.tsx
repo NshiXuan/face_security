@@ -7,13 +7,13 @@ import { ColumnsType } from "antd/es/table"
 import { INotice } from "@/type"
 import { formatTimeV2 } from "@/utils"
 import useTable from "@/hooks/useTable"
-import { deleteNotice, getNoticeList, getNoticesByTime } from "@/service/notice"
+import { deleteNotice, deleteNotices, getNoticeList, getNoticesByTime } from "@/service/notice"
 
 const { RangePicker } = DatePicker;
 
 
 const Notice = function () {
-  const { loading, rowSelection, pagination, setPagination, handlePageChange } = useTable()
+  const { loading, rowSelection, selectedRowKeys, pagination, setPagination, handlePageChange } = useTable()
   const [notices, setNotices] = useState<INotice[]>([])
   const [start, setStart] = useState(0)
   const [end, setEnd] = useState(0)
@@ -63,6 +63,19 @@ const Notice = function () {
     })
   }
 
+  function handleBatchDelete() {
+    if (selectedRowKeys.length > 0) {
+      deleteNotices(selectedRowKeys as any).then(res => {
+        if (res.code == 200) {
+          handleGetNotices()
+          // TODO(nsx): 将 selectedRowKeys 置为 0
+        }
+      })
+    } else {
+      message.warning("请勾选删除内容")
+    }
+  }
+
   const columns: ColumnsType<INotice> = [
     {
       title: '信息',
@@ -102,11 +115,15 @@ const Notice = function () {
   return (
     <div className="px-5">
       <div className="my-2 flex gap-4">
+        <Popconfirm title="确认删除吗？" cancelText="取消" okText="确认" onConfirm={handleBatchDelete}>
+          <Button type='primary' danger>批量删除</Button>
+        </Popconfirm>
         <RangePicker showTime onChange={handleChange} />
         <Button type="primary" onClick={handleSearch}>搜索</Button>
         <Button type="primary" onClick={handleReset}>重置</Button>
       </div>
       <Table
+        rowKey={(record) => record.id}
         dataSource={notices}
         columns={columns}
         loading={loading}
@@ -120,5 +137,3 @@ const Notice = function () {
 
 export default Notice
 
-// 设置一个方便调试的name 可以不写 默认为组件名称
-Notice.displayName = "Notice"

@@ -101,7 +101,7 @@ const Home = function () {
   }, []);
 
   return (
-    <div className='flex p-4 gap-5'>
+    <div className='flex p-3 gap-5'>
       <div id="echart1" ref={cDom1} style={{ width: '40vw', height: '80vh' }} />
       <div id="echart2" ref={cDom2} style={{ width: '40vw', height: '80vh' }} />
     </div>

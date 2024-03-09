@@ -30,3 +30,12 @@ export const deleteNotice = (id: number) => {
     url: '/notice/' + id
   })
 }
+
+export const deleteNotices = (ids: number[]) => {
+  return request.delete<IResp<INotice>>({
+    url: '/notices',
+    params: {
+      ids: ids.join(',')
+    }
+  })
+}

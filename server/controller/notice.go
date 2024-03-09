@@ -6,6 +6,7 @@ import (
 	"server/schemas"
 	"server/service"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -65,6 +66,27 @@ func DeleteNotice(ctx *gin.Context) {
 		return
 	}
 	notice, err := service.DeleteNotice(int64(id))
+	if err != nil {
+		log.Println(err)
+		RespErrorWithMsg(ctx, http.StatusInternalServerError, err)
+		return
+	}
+	RespSuccess(ctx, notice)
+}
+
+func DeleteNotices(ctx *gin.Context) {
+	idStrs := strings.Split(ctx.Query("ids"), ",")
+	var ids []int64
+	for _, val := range idStrs {
+		id, err := strconv.Atoi(val)
+		if err != nil {
+			log.Panicln(err)
+			RespErrorWithMsg(ctx, http.StatusBadRequest, err)
+			return
+		}
+		ids = append(ids, int64(id))
+	}
+	notice, err := service.DeleteNotices(ids)
 	if err != nil {
 		log.Println(err)
 		RespErrorWithMsg(ctx, http.StatusInternalServerError, err)

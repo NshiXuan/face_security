@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import { Table, Tag, Button, message, Popconfirm, Space } from "antd"
+import { Table, Tag, Button, message, Popconfirm, Space, Alert } from "antd"
 import { ColumnsType } from "antd/es/table"
 import { DeleteOutlined, FormOutlined, SearchOutlined } from '@ant-design/icons'
 
@@ -285,6 +285,7 @@ const Face = function () {
 
             <div>
               <div className="mb-2 font-bold">人脸预览</div>
+              <Alert message='录入人脸成功后再确认' type='info' showIcon className='mb-4' />
               {showEntryNote && <span className="text-red-500">请录入人脸</span>}
               <canvas id="photo" width={240} height={180} className="rounded-md"></canvas>
             </div>

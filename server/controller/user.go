@@ -1,9 +1,12 @@
 package controller
 
 import (
+	"log"
+	"net/http"
 	"server/schemas"
 	"server/service"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -96,6 +99,27 @@ func DeleteUser(ctx *gin.Context) {
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
+	}
+	RespSuccess(ctx, user)
+}
+
+func DeleteUsers(ctx *gin.Context) {
+	idStrs := strings.Split(ctx.Query("ids"), ",")
+	var ids []int64
+	for _, val := range idStrs {
+		id, err := strconv.Atoi(val)
+		if err != nil {
+			log.Panicln(err)
+			RespErrorWithMsg(ctx, http.StatusBadRequest, err)
+			return
+		}
+		ids = append(ids, int64(id))
+	}
+	user, err := service.DeleteUsers(ids)
+	if err != nil {
+		log.Println(err)
+		RespErrorWithMsg(ctx, http.StatusInternalServerError, err)
 		return
 	}
 	RespSuccess(ctx, user)

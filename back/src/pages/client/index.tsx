@@ -9,10 +9,13 @@ import { useNavigate, useParams } from "react-router-dom"
 import useWebsocket from "@/hooks/useWebsocket"
 import { getNoticeList } from "@/service/notice"
 import { formatTimeV2 } from "@/utils"
+import { useSyncLocalStorage } from "@/hooks/useSyncLocalStorage"
+import { ILoginResp, layout } from "@/service/auth"
 
 const Client = function () {
   const [user, setUser] = useState<IUser>()
   const [notices, setNotices] = useState<string[]>([])
+  const [userInfo, setUserInfo] = useSyncLocalStorage<ILoginResp>("user_info")
   const { ws } = useWebsocket()
   const nav = useNavigate()
   const params = useParams()
@@ -51,8 +54,14 @@ const Client = function () {
   }
 
   function handleLogout() {
-    localStorage.removeItem('token')
-    nav('/login')
+    if (userInfo) {
+      layout(userInfo.user_id).then(res => {
+        if (res.code == 200) {
+          localStorage.removeItem('user_info')
+          nav('/login')
+        }
+      })
+    }
   }
 
   function handleGetNotice() {

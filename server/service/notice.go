@@ -45,3 +45,11 @@ func DeleteNotice(id int64) (*schemas.Notice, error) {
 	}
 	return &notice, nil
 }
+
+func DeleteNotices(ids []int64) (*schemas.Notice, error) {
+	var notice schemas.Notice
+	if err := global.DB.Delete(&notice, ids).Error; err != nil {
+		return nil, err
+	}
+	return &notice, nil
+}

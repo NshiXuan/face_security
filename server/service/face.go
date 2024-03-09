@@ -11,7 +11,11 @@ import (
 
 // TODO(nsx): 删除在创建会出现数据已存在
 func CreateFace(req *schemas.CreateFaceReq) (string, error) {
-	name := req.Name
+	var user schemas.User
+	if res := global.DB.First(user, "name = ?", req.Name); res.RowsAffected != 1 {
+		return "", fmt.Errorf("用户 %s 不存在,请先创建用户", req.Name)
+	}
+
 	file := req.File
 	rec := global.Rec
 	f, err := file.Open()
@@ -43,7 +47,7 @@ func CreateFace(req *schemas.CreateFaceReq) (string, error) {
 	}
 
 	var sface schemas.Face
-	sface.Name = name
+	sface.Name = req.Name
 	sface.ImageUrl = path
 	if err := global.DB.Save(&sface).Error; err != nil {
 		return "", err

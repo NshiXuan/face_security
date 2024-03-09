@@ -2,9 +2,11 @@ package controller
 
 import (
 	"log"
+	"net/http"
 	"server/middlewares"
 	"server/schemas"
 	"server/service"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -12,17 +14,18 @@ import (
 	"go.uber.org/zap"
 )
 
-func Login(ctx *gin.Context) {
+func PhoneLogin(ctx *gin.Context) {
 	var req schemas.LoginReq
 	if err := ctx.BindJSON(&req); err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
 		return
 	}
-	user, err := service.Login(&req)
+	user, err := service.PhoneLogin(&req)
 	if err != nil {
 		zap.S().Error(err)
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
 	}
 	j := middlewares.NewJWT()
 	token, err := j.CreateToken(middlewares.CustomClaims{
@@ -37,6 +40,7 @@ func Login(ctx *gin.Context) {
 	if err != nil {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 	}
+
 	RespSuccess(ctx, schemas.LoginResp{
 		UserId: user.ID,
 		RoleId: user.RoleID,
@@ -44,6 +48,7 @@ func Login(ctx *gin.Context) {
 	})
 }
 
+// TODO(nsx): 使用事务
 func FaceLogin(ctx *gin.Context) {
 	var req schemas.FindFaceReq
 	if err := ctx.ShouldBind(&req); err != nil {
@@ -77,11 +82,65 @@ func FaceLogin(ctx *gin.Context) {
 	if err != nil {
 		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
 	}
-	// TODO(nsx): 这里的 userid 有问题，它为 face id
+
+	user, err := service.Login(int64(users[0].ID))
+	if err != nil {
+		log.Panicln(err)
+		RespErrorWithMsg(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+
 	RespSuccess(ctx, schemas.LoginResp{
-		UserId: users[0].ID,
-		RoleId: users[0].RoleID,
+		UserId: user.ID,
+		RoleId: user.RoleID,
 		Token:  token,
+	})
+}
+
+func FaceLeave(ctx *gin.Context) {
+	var req schemas.FindFaceReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		zap.S().Error(err)
+		RespErrorWithMsg(ctx, CodeBadRequest, err.Error())
+		return
+	}
+	face, err := service.FindFace(&req)
+	if err != nil {
+		zap.S().Error(err)
+		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
+	}
+	users, err := service.GetUserByName(face.Name)
+	if err != nil {
+		log.Panicln(err)
+		RespErrorWithMsg(ctx, CodeInternalServerError, err.Error())
+		return
+	}
+	user, err := service.Layout(int64(users[0].ID))
+	if err != nil {
+		log.Panicln(err)
+		RespErrorWithMsg(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	RespSuccess(ctx, user)
+}
+
+func Layout(ctx *gin.Context) {
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		log.Panicln(err)
+		RespErrorWithMsg(ctx, http.StatusBadRequest, err.Error())
+		return
+	}
+	user, err := service.Layout(int64(id))
+	if err != nil {
+		log.Panicln(err)
+		RespErrorWithMsg(ctx, http.StatusInternalServerError, err.Error())
+		return
+	}
+	RespSuccess(ctx, map[string]any{
+		"user_id": user.ID,
+		"name":    user.Name,
 	})
 }
 

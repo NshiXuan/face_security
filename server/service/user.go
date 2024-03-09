@@ -49,7 +49,7 @@ func GetUserById(id int64) (*schemas.User, error) {
 	return &user, nil
 }
 
-func UpdateUser(id int64, req *schemas.CreateUserReq) (*schemas.User, error) {
+func UpdateUser(id int64, req *schemas.UpdateUserReq) (*schemas.User, error) {
 	var user schemas.User
 	if res := global.DB.First(&user, id); res.RowsAffected == 0 {
 		return nil, fmt.Errorf("user no found")
@@ -72,6 +72,9 @@ func UpdateUser(id int64, req *schemas.CreateUserReq) (*schemas.User, error) {
 	if req.RoleID != 0 {
 		user.RoleID = req.RoleID
 	}
+	if req.IsLogin != 0 {
+		user.IsLogin = req.IsLogin
+	}
 	if err := global.DB.Save(&user).Error; err != nil {
 		return nil, fmt.Errorf("db err: %w", err)
 	}
@@ -84,6 +87,14 @@ func DeleteUser(id int64) (*schemas.User, error) {
 		return nil, fmt.Errorf("user not found")
 	}
 	if err := global.DB.Delete(&user, id).Error; err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func DeleteUsers(ids []int64) (*schemas.User, error) {
+	var user schemas.User
+	if err := global.DB.Delete(&user, ids).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

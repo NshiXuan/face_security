@@ -17,6 +17,7 @@ export interface IUser extends IBase {
   gender: number
   phone: string
   address: string
+  is_login: number
   role_id: number
   role?: IRole
 }

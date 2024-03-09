@@ -14,10 +14,10 @@ import BaseForm, { IOption, IOptions } from '@/components/base-form'
 import userForm from '@/components/base-form/user-form'
 import Search from 'antd/es/input/Search'
 import { getRoleList } from '@/service/role'
-import { createUser, deleteUser, getUserByName, getUserList, updateUser } from '@/service/user'
+import { createUser, deleteUser, deleteUsers, getUserByName, getUserList, updateUser } from '@/service/user'
 
 const User = function () {
-  const { rowSelection, pagination, setPagination, loading, handlePageChange } = useTable()
+  const { rowSelection, selectedRowKeys, pagination, setPagination, loading, handlePageChange } = useTable()
   const { form } = useBaseForm()
   const [isOpen, setIsOpen] = useState(false)
   const [users, setUsers] = useState<IUser[]>()
@@ -118,9 +118,17 @@ const User = function () {
     })
   }
 
-  // TODO(nsx): 批量删除
   function handleBatchDelete() {
-
+    if (selectedRowKeys.length > 0) {
+      deleteUsers(selectedRowKeys as any).then(res => {
+        if (res.code == 200) {
+          handleGetUserList()
+          // TODO(nsx): 将 selectedRowKeys 置为 0
+        }
+      })
+    } else {
+      message.warning("请勾选删除内容")
+    }
   }
 
   const columns: ColumnsType<IUser> = [
@@ -160,8 +168,15 @@ const User = function () {
       }
     },
     {
+      title: '是否在小区内',
+      dataIndex: 'is_login',
+      render: (is_login: number) => {
+        return <div>{["否", "是"][is_login - 1]}</div>
+      }
+    },
+    {
       title: '创建时间',
-      dataIndex: 'ctime', // dataIndex必须映射好 不如render拿不到数据
+      dataIndex: 'ctime',
       render: (value: number) => {
         return <div>{value ? formatTimeV3(value) : '/'}</div>
       }
@@ -191,6 +206,10 @@ const User = function () {
   return (
     <div className="px-5 ">
       <div className='mb-2 flex items-center gap-2'>
+        <Popconfirm title="确认删除吗？" cancelText="取消" okText="确认" onConfirm={handleBatchDelete}>
+          <Button type='primary' danger>批量删除</Button>
+        </Popconfirm>
+
         <Button type="primary" className='mr-4' onClick={() => handleOpen('add')}>添加用户</Button>
         <Space className='mr-2'>
           <Search placeholder="请输入用户名" enterButton={<SearchOutlined />} onSearch={handleSearch} />

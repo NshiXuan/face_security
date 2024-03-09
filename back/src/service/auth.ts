@@ -19,14 +19,19 @@ export const login = (params: ILoginReq) => {
   })
 }
 
-export type CheckRoleResp = {
-  user_name: string
-  role_id: number
-}
-
-export const checkRole = (params: { token: string }) => {
-  return request.post<IResp<CheckRoleResp>>({
-    url: '/auth/check',
-    data: params
+export const layout = (id: number) => {
+  return request.post<IResp<ILoginResp>>({
+    url: '/auth/layout/' + id
   })
 }
+
+// export type CheckRoleResp = {
+//   user_name: string
+//   role_id: number
+// }
+// export const checkRole = (params: { token: string }) => {
+//   return request.post<IResp<CheckRoleResp>>({
+//     url: '/auth/check',
+//     data: params
+//   })
+// }

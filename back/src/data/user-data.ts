@@ -12,6 +12,7 @@ for (let i = 1; i <= 20; i++) {
     gender: Math.floor(Math.random() * 2 + 1),
     phone: '13312312311',
     address: '01单元211',
+    is_login: Math.floor(Math.random() * 2 + 1),
     role_id: Math.floor(Math.random() * 3 + 1),
     ctime: new Date().getTime(),
     mtime: new Date().getTime()

@@ -6,6 +6,8 @@ import { menuData } from '@/data/menu-data'
 import { Dropdown, MenuProps } from 'antd'
 import avatar from '@/assets/img/bg.png'
 import { useNavigate } from 'react-router-dom'
+import { ILoginResp, layout } from '@/service/auth'
+import { useSyncLocalStorage } from '@/hooks/useSyncLocalStorage'
 
 interface ICollapseContext {
   ws: any
@@ -21,12 +23,19 @@ export const CollapseContext = createContext<ICollapseContext>({
 
 const BreadCrumb = function () {
   const { collapse, setCollapse } = useContext(CollapseContext)
+  const [userInfo, setUserInfo] = useSyncLocalStorage<ILoginResp>("user_info")
   const { menuBread } = useMenu(menuData)
   const nav = useNavigate()
 
   function handleLogout() {
-    localStorage.removeItem('token')
-    nav('/login')
+    if (userInfo) {
+      layout(userInfo.user_id).then(res => {
+        if (res.code == 200) {
+          localStorage.removeItem('user_info')
+          nav('/login')
+        }
+      })
+    }
   }
 
   const items: MenuProps['items'] = [
@@ -67,5 +76,3 @@ const BreadCrumb = function () {
 }
 
 export default BreadCrumb
-
-

@@ -10,6 +10,10 @@ export default function useAuth() {
   const [isLogin, setIsLogin] = useState(false)
 
   useEffect(() => {
+    if (!userInfo) {
+      setIsLogin(false)
+      return nav('/login')
+    }
     const { token, role_id, user_id } = userInfo
     if (token == undefined || token.trim() == "") {
       setIsLogin(false)

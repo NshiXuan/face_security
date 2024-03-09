@@ -52,3 +52,12 @@ export const deleteUser = (id: number) => {
     url: '/user/' + id
   })
 }
+
+export const deleteUsers = (ids: number[]) => {
+  return request.delete<IResp<IUser>>({
+    url: '/users',
+    params: {
+      ids: ids.join(',')
+    }
+  })
+}

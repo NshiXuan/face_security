@@ -30,15 +30,19 @@ func InitRouter() *gin.Engine {
 	r.GET("/user", controller.GetUserByName)
 	r.GET("/user/:id", controller.GetUserById)
 	r.PUT("/user/:id", controller.UpdateUser)
+	r.DELETE("/users", controller.DeleteUsers)
 	r.DELETE("/user/:id", controller.DeleteUser)
 
-	r.POST("/auth/login", controller.Login)
+	r.POST("/auth/login", controller.PhoneLogin)
+	r.POST("/auth/layout/:id", controller.Layout)
 	r.POST("/auth/face", controller.FaceLogin)
+	r.POST("/auth/face/leave", controller.FaceLeave)
 	// r.POST("/auth/check", controller.CheckRole)
 
 	r.POST("/notice", controller.CreateNotice)
 	r.GET("/notices", controller.GetNotices)
 	r.GET("/notice", controller.GetNoticesByTime)
+	r.DELETE("/notices", controller.DeleteNotices)
 	r.DELETE("/notice/:id", controller.DeleteNotice)
 
 	r.GET("/ws", controller.HandleWebSocket)

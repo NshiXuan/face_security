@@ -9,4 +9,7 @@ type CreateUserReq struct {
 	RoleID   int64  `json:"role_id,omitempty" binding:"required"`
 }
 
-type UpdateUserReq = CreateUserReq
+type UpdateUserReq struct {
+	CreateUserReq
+	IsLogin int `json:"is_login,omitempty"`
+}

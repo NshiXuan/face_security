@@ -14,19 +14,34 @@ import axios, { AxiosResponse } from 'axios'
 import useWebsocket from '@/hooks/useWebsocket'
 import { createNotice } from '@/service/notice'
 import { formatTimeV2 } from '@/utils'
+import { updateUser } from '@/service/user'
+
+export type LoginTitle = 'face' | 'phone' | 'leave'
 
 const Login = function () {
   const { form } = useBaseForm()
-  const [title, setTitle] = useState<'face' | 'phone'>('phone')
+  const [title, setTitle] = useState<LoginTitle>('phone')
   const [userInfo, setUserInfo] = useSyncLocalStorage<ILoginResp>("user_info")
   const [videoEl, setVideoEl] = useState<any>()
   const { ws } = useWebsocket()
   const nav = useNavigate()
 
-  function handleChange() {
-    setTitle(title == 'face' ? 'phone' : 'face')
-    title == 'phone' ? getCamera() : closeCamera()
+  function handleChangePhone() {
+    if (title != "phone") {
+      closeCamera()
+    }
+    setTitle('phone')
   }
+
+  function handleChangeFace(key: LoginTitle) {
+    if (title != key) {
+      getCamera()
+      closeCamera()
+    }
+    setTitle(key)
+  }
+
+
 
   async function getCamera() {
     try {
@@ -42,6 +57,7 @@ const Login = function () {
   function closeCamera() {
     if (videoEl) {
       const stream = videoEl.srcObject;
+      if (!stream) return
       const tracks = stream.getTracks();
       tracks.forEach(function (track: any) {
         track.stop();
@@ -51,6 +67,7 @@ const Login = function () {
   }
 
   function handleLogin() {
+    console.log("🚀 ~ handleLogin ~ title:", title)
     if (title == 'phone') {
       form.validateFields().then(async (values: ILoginUser) => {
         if (values.phone == undefined || values.password == undefined) {
@@ -72,45 +89,73 @@ const Login = function () {
       }).catch((info) => {
         console.log('Validate Failed:', info)
       })
+    } else if (title == "face") {
+      handleRecognition(title)
     } else {
-      handleRecognition()
+      handleRecognition(title)
     }
   }
 
-  function handleRecognition() {
+  function handleRecognition(key: LoginTitle) {
     const photoEl = document.getElementById("photo") as HTMLCanvasElement
     const ctx = photoEl.getContext('2d')
     ctx?.drawImage(videoEl, 0, 0, 240, 180)
     const dataURL = photoEl.toDataURL("image/jpeg");
     const param = new FormData()
     param.append("file", base64UrlToBlob(dataURL))
-    axios.post('http://localhost:8088/api/v1/auth/face', param, {
-      headers: {
-        "Content-Type": "multipart/form-data"
-      }
-    }).then((res: AxiosResponse<IResp<ILoginResp>>) => {
-      if (res.data.code == 200) {
-        setUserInfo(res.data.data!)
-        closeCamera()
-        if (res.data?.data?.role_id == 1) {
-          return nav('/home')
+
+    if (title == "face") {
+      axios.post('http://localhost:8088/api/v1/auth/face', param, {
+        headers: {
+          "Content-Type": "multipart/form-data"
         }
-        return nav('/client/' + res.data.data?.user_id)
-      }
-      if (res.data.msg == '人脸数据不存在') {
-        const message = "有陌生人靠近"
-        ws.send(formatTimeV2(new Date().getTime()) + " : " + message)
-        createNotice({ message }).then(res => {
-          console.log("🚀 ~ createNotice ~ res:", res)
-        }).catch(err => {
-          console.log("🚀 ~ createNotice ~ err:", err)
+      }).then((res: AxiosResponse<IResp<ILoginResp>>) => {
+        if (res.data.code == 200) {
+          setUserInfo(res.data.data!)
+          closeCamera()
+          if (res.data?.data?.role_id == 1) {
+            return nav('/home')
+          }
+          return nav('/client/' + res.data.data?.user_id)
+        }
+        if (res.data.msg == '人脸数据不存在') {
+          const message = "有陌生人靠近"
+          ws.send(formatTimeV2(new Date().getTime()) + " : " + message)
+          createNotice({ message }).then(res => {
+            console.log("🚀 ~ createNotice ~ res:", res)
+          }).catch(err => {
+            console.log("🚀 ~ createNotice ~ err:", err)
+          })
+        }
+        message.open({
+          type: "error",
+          content: res.data.msg
         })
-      }
-      message.open({
-        type: "error",
-        content: res.data.msg
       })
-    })
+    } else {
+      axios.post('http://localhost:8088/api/v1/auth/face/leave', param, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then((res: AxiosResponse<IResp<ILoginResp>>) => {
+        if (res.data.code == 200) {
+          console.log("🚀 ~ handleRecognition ~ res:", res)
+        }
+        if (res.data.msg == '人脸数据不存在') {
+          const message = "有陌生人靠近"
+          ws.send(formatTimeV2(new Date().getTime()) + " : " + message)
+          createNotice({ message }).then(res => {
+            console.log("🚀 ~ createNotice ~ res:", res)
+          }).catch(err => {
+            console.log("🚀 ~ createNotice ~ err:", err)
+          })
+        }
+        message.open({
+          type: "error",
+          content: res.data.msg
+        })
+      })
+    }
   }
 
   function base64UrlToBlob(url: string) {
@@ -141,12 +186,14 @@ const Login = function () {
           </div>
           <canvas id="photo" width={240} height={180} className="hidden"></canvas>
           <div className='mx-auto '>
-            <Button type='primary' onClick={handleLogin} >登录</Button>
+            <Button type='primary' onClick={handleLogin} >{title == 'leave' ? '离开' : '登录'}</Button>
           </div>
           <div>
-            <a onClick={handleChange} className="text-xs cursor-pointer hover:text-blue-500">{title == 'face' ? '手机号登录' : '人脸识别登录'}</a>
+            <a onClick={handleChangePhone} className="text-xs cursor-pointer hover:text-blue-500">手机号登录</a>
             <span className='mx-2 text-slate-500'>|</span>
-            <a className="text-xs cursor-pointer hover:text-blue-500">人脸识别离开</a>
+            <a onClick={() => handleChangeFace('face')} className="text-xs cursor-pointer hover:text-blue-500">人脸识别登录</a>
+            <span className='mx-2 text-slate-500'>|</span>
+            <a onClick={() => handleChangeFace('leave')} className="text-xs cursor-pointer hover:text-blue-500">人脸识别离开</a>
             <div>
               <a className="text-xs cursor-pointer hover:text-blue-500">找回密码</a>
             </div>
@@ -159,6 +206,3 @@ const Login = function () {
 }
 
 export default Login
-
-// 设置一个方便调试的name 可以不写 默认为组件名称
-Login.displayName = 'Login'

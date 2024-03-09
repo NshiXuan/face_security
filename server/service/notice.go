@@ -16,8 +16,6 @@ func GetNotices() ([]schemas.Notice, error) {
 }
 
 func GetNoticesByTime(start, end int64) ([]schemas.Notice, error) {
-	fmt.Printf("start: %v\n", start)
-	fmt.Printf("end: %v\n", end)
 	// 将时间戳转换为 time.Time 类型
 	startTime := time.Unix(start, 0)
 	endTime := time.Unix(end, 0)

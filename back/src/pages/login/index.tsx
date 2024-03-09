@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 
 import BaseForm from '@/components/base-form'
 import { loginForm } from '@/components/base-form/login-form'
@@ -18,7 +18,7 @@ import { formatTimeV2 } from '@/utils'
 const Login = function () {
   const { form } = useBaseForm()
   const [title, setTitle] = useState<'face' | 'phone'>('phone')
-  const [token, setToken] = useSyncLocalStorage("token")
+  const [userInfo, setUserInfo] = useSyncLocalStorage<ILoginResp>("user_info")
   const [videoEl, setVideoEl] = useState<any>()
   const { ws } = useWebsocket()
   const nav = useNavigate()
@@ -61,7 +61,7 @@ const Login = function () {
         }
         login({ phone: values.phone, password: values.password }).then(res => {
           if (res.code == 200) {
-            setToken(res.data!.token)
+            setUserInfo(res.data)
             if (res.data?.role_id == 1) {
               return nav('/home')
             }
@@ -90,7 +90,7 @@ const Login = function () {
       }
     }).then((res: AxiosResponse<IResp<ILoginResp>>) => {
       if (res.data.code == 200) {
-        setToken(res.data!.data?.token)
+        setUserInfo(res.data.data!)
         closeCamera()
         if (res.data?.data?.role_id == 1) {
           return nav('/home')
